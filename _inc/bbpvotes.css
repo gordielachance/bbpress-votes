@@ -1,0 +1,30 @@
+a.bbpvotes-post-vote-link .bbpvotes-icon{
+    display:none;
+}
+a.bbpvotes-post-vote-link.loading .bbpvotes-icon-loading,
+a.bbpvotes-post-vote-link.success .bbpvotes-icon-success,
+a.bbpvotes-post-vote-link.error .bbpvotes-icon-error{
+    display:inherit;
+}
+
+.bbpvotes-post-votes-log{
+  border-top: 1px dotted #ddd;
+  width: 100%;
+  margin: 0;
+  padding: 8px 0 0 0;
+  font-size: 11px;
+  color: #aaa;
+}
+.bbpvotes-post-votes-log a{
+    position:relative;
+}
+
+.bbpvotes-post-votes-log a img{
+    display:inline!important;
+}
+
+.bbpvotes-post-votes-log a small{
+    position:absolute;
+    bottom:0;
+    right:0;
+}
