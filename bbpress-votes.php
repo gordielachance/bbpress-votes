@@ -110,8 +110,8 @@ class bbP_Votes {
             add_filter( 'bbp_topic_admin_links', array($this, 'vote_admin_link'), 10, 2);
             add_filter( 'bbp_reply_admin_links', array($this, 'vote_admin_link'), 10, 2);
             
-            //add_filter( 'bbp_get_reply_content', array($this, 'post_content_append_votes_log'),  98,  2 );
-            //add_filter( 'bbp_get_topic_content', array($this, 'post_content_append_votes_log'),  98,  2 );
+            add_filter( 'bbp_get_reply_content', array($this, 'post_content_append_votes_log'),  98,  2 );
+            add_filter( 'bbp_get_topic_content', array($this, 'post_content_append_votes_log'),  98,  2 );
             
             add_action("wp", array(&$this,"process_vote_up_link"));    //vote up without ajax
             add_action("wp", array(&$this,"process_vote_down_link"));    //vote down without ajax

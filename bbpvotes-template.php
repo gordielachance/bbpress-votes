@@ -287,42 +287,40 @@ function bbpvotes_get_post_votes_log( $post_id = 0 ) {
         
         $votes_up = bbpvotes_get_votes_up_for_post();
         $votes_down = bbpvotes_get_votes_down_for_post();
+        
+        $votes = array();
+        
+        foreach ( (array) $votes_up as $user_id ) {
+            $votes[$user_id] = 1;
+        }
+        
+        foreach ( (array) $votes_down as $user_id ) {
+            $votes[$user_id] = -1;
+        }
+        
+        if (empty($votes)) return;
 
         
         $r = "\n\n" . '<div id="bbpvotes-post-votes-log-' . esc_attr( $post_id ) . '" class="bbpvotes-post-votes-log">' . "\n\n";
 
-        if($votes_up){
-            $r .='<p class="bbpvotes-post-votes-up-log">';
-            // Loop through revisions
-            foreach ( (array) $votes_up as $user_id ) {
-                
-                $user_id = bbp_get_user_id( $user_id );
-                $user      = get_userdata( $user_id );
-                
+        foreach ( $votes as $user_id => $score ) {
+            
+            $user_id = bbp_get_user_id( $user_id );
+            $user = get_userdata( $user_id );
+
+            if ($score>0){
                 $title = sprintf( esc_html__( '%1$s voted up', 'bbpvotes' ), $user->display_name);
-
-                $user_avatar = get_avatar( $user_id, 30 );
-                $r .= '<a title="'.$title.'" href="' . esc_url( bbp_get_user_profile_url( $user_id ) ) . '">' . $user_avatar . '<small>+1</small></a>';
-            }
-            $r .='</p>';
-        }
-        
-        if($votes_down){
-            $r .='<p class="bbpvotes-post-votes-down-log">';
-            // Loop through revisions
-            foreach ( (array) $votes_down as $user_id ) {
-
-                $user_id = bbp_get_user_id( $user_id );
-                $user      = get_userdata( $user_id );
-                
+                $icon = '<i class="bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-plus fa fa-plus-square"></i>';
+            }else{
                 $title = sprintf( esc_html__( '%1$s voted down', 'bbpvotes' ), $user->display_name);
-
-                $user_avatar = get_avatar( $user_id, 30 );
-                $r .= '<a title="'.$title.'" href="' . esc_url( bbp_get_user_profile_url( $user_id ) ) . '">' . $user_avatar . '<small>-1</small></a>';
+                $icon = '<i class="bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-minus fa fa-minus-square"></i>';
             }
-            $r .='</p>';
-        }
 
+
+            $user_avatar = get_avatar( $user_id, 30 );
+            $user_vote_link = '<a title="'.$title.'" href="' . esc_url( bbp_get_user_profile_url( $user_id ) ) . '">' . $user_avatar . $icon;
+            $r.= apply_filters('bbpvotes_get_post_votes_log_user',$user_vote_link,$user_id,$score);
+        }
         
         $r .= "\n" . '</div>' . "\n\n";
 
@@ -330,10 +328,11 @@ function bbpvotes_get_post_votes_log( $post_id = 0 ) {
  
 }
 
+
 function bbpvotes_classes_attr($classes=false){
     if (!$classes) return false;
     return ' class="'.implode(" ",(array)$classes).'"';	
-}  
+}
 
 
 ?>

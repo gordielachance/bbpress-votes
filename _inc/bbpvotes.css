@@ -7,7 +7,7 @@ a.bbpvotes-post-vote-link.error .bbpvotes-icon-error{
     display:inherit;
 }
 
-.bbpvotes-post-votes-log{
+#bbpress-forums .bbpvotes-post-votes-log{
   border-top: 1px dotted #ddd;
   width: 100%;
   margin: 0;
@@ -15,16 +15,23 @@ a.bbpvotes-post-vote-link.error .bbpvotes-icon-error{
   font-size: 11px;
   color: #aaa;
 }
-.bbpvotes-post-votes-log a{
+#bbpress-forums .bbpvotes-post-votes-log a{
     position:relative;
+    display:inline-block!important;
+    margin:2.5px;
+    width:30px;
+    height:30px;
 }
 
-.bbpvotes-post-votes-log a img{
+#bbpress-forums .bbpvotes-post-votes-log a img{
     display:inline!important;
 }
 
-.bbpvotes-post-votes-log a small{
+#bbpress-forums .bbpvotes-post-votes-log a .bbpvotes-avatar-icon-vote{
     position:absolute;
-    bottom:0;
-    right:0;
+    bottom:-2.5px;
+    right:-2.5px;
+    font-size:1em;
+    width:1em;
+    height:1em;
 }
