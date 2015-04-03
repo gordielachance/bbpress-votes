@@ -85,10 +85,10 @@ class bbP_Votes {
                 
                 //options
                 $this->options_default = array(
-                    'vote_up_cap'       => 'read',
-                    'vote_down_cap'     => 'read',
-                    'embed_links'       => true,
-                    'embed_votes_log'   => true,
+                    'vote_up_cap'       => 'read',  //capability required to vote up
+                    'vote_down_cap'     => 'read',  //capability required to vote down
+                    'embed_links'       => true,    //embed score, vote up, vote down links above replies
+                    'embed_votes_log'   => true,    //embed vote log after replies content
 
                 );
                 $options = get_option( $this->metaname_options, $this->options_default );
@@ -99,6 +99,7 @@ class bbP_Votes {
 	function includes(){
             require( $this->plugin_dir . 'bbpvotes-template.php');
             require( $this->plugin_dir . 'bbpvotes-ajax.php');
+            require( $this->plugin_dir . 'bbpvotes-buddypress.php');
             if (is_admin()){
                 require( $this->plugin_dir . 'bbpvotes-admin.php');
             }

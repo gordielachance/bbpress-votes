@@ -44,7 +44,6 @@ jQuery(document).ready(function($){
                         voteUpLink.text(bbpvotesL10n.vote_up);
                     }
                 }
-                console.log(data);
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 link.addClass('error');
