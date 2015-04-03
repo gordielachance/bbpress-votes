@@ -42,7 +42,7 @@ Upload the plugin to your blog and Activate it.
 
 == Changelog ==
 
-= 0.1 =
+= 1.0 =
 * First release
 
 == Upgrade Notice ==
