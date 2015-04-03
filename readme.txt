@@ -1,7 +1,7 @@
 === bbPress Votes ===
 Contributors:grosbouff
 Donate link:http://bit.ly/gbreant
-Tags: bbPress, vote, rate, BuddyPress
+Tags: bbPress, vote, votes, rate, rating, ratings, BuddyPress
 Requires at least: 4.1.1
 Tested up to: 4.1.1
 Stable tag: trunk
@@ -15,9 +15,8 @@ Allow users to vote up or down to topics and replies inside bbPress, just like y
 
 *   Ajaxed
 *   Compatible with BuddyPress
+*   Hooks and filters to extend the plugin
 
-
- 
 = Demo =
 See it in action [here](www.pencil2d.org/?post_type=forum).
 
@@ -39,6 +38,7 @@ Upload the plugin to your blog and Activate it.
 
 == Screenshots ==
 
+1. A single reply with score, vote up and vote down links (top) and vote log (after reply content)
 
 == Changelog ==
 

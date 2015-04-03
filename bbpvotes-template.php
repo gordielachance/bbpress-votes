@@ -43,6 +43,19 @@ function bbpvotes_get_link_icons(){
     return implode('',$icons);
 }
 
+function bbpvotes_can_user_vote_up_for_post($post_id = null){
+    if (!$post_id) return false;
+    if (!$user_id = get_current_user_id()) return false;
+    $can = current_user_can( bbpvotes()->options['vote_up_cap'], $post_id );
+    return apply_filters('bbpvotes_can_user_vote_up_for_post',$can,$post_id);
+}
+function bbpvotes_can_user_vote_down_for_post($post_id = null){
+    if (!$post_id) return false;
+    if (!$user_id = get_current_user_id()) return false;
+    $can = current_user_can( bbpvotes()->options['vote_down_cap'], $post_id );
+    return apply_filters('bbpvotes_can_user_vote_up_for_post',$can,$post_id);
+}
+
 
 function bbpvotes_get_vote_up_link( $args = '' ) {
 
@@ -55,7 +68,10 @@ function bbpvotes_get_vote_up_link( $args = '' ) {
                 'text'    => esc_html__( 'Vote up',   'bbpvotes' ),
         ), 'get_post_vote_up_link' );
 
-        $post = get_post( (int) $r['id'] );
+        if (!$post = get_post( (int) $r['id'] )) return false;
+        
+        //capability check
+        if (!bbpvotes_can_user_vote_up_for_post($post->ID)) return false;
         
         if ( $post->post_author == get_current_user_id() ) return false;    //user cannot vote for himself
         
@@ -81,10 +97,6 @@ function bbpvotes_get_vote_up_link( $args = '' ) {
             $r['title'] = esc_html__( 'You have voted up for this post',   'bbpvotes' );
             $link_classes[] = 'bbpvotes-post-voted';
         }
-        
-
-
-        if ( empty( $post ) || !current_user_can( 'moderate', $post->ID ) ) return;
 
         $uri     = add_query_arg( array( 'action' => 'bbpvotes_post_vote_up', 'post_id' => $post->ID ) );
         $uri     = wp_nonce_url( $uri, 'vote-up-post_' . $post->ID );
@@ -106,7 +118,10 @@ function bbpvotes_get_vote_down_link( $args = '' ) {
                 'text'    => esc_html__( 'Vote down',   'bbpvotes' ),
         ), 'get_post_vote_down_link' );
 
-        $post = get_post( (int) $r['id'] );
+        if (!$post = get_post( (int) $r['id'] )) return false;
+        
+        //capability check
+        if (!bbpvotes_can_user_vote_down_for_post($post->ID)) return false;
         
         if ( $post->post_author == get_current_user_id() ) return false;    //user cannot vote for himself
         
@@ -132,8 +147,6 @@ function bbpvotes_get_vote_down_link( $args = '' ) {
             $r['title'] = esc_html__( 'You have voted down for this post',   'bbpvotes' );
             $link_classes[] = 'bbpvotes-post-voted';
         }
-
-        if ( empty( $post ) || !current_user_can( 'moderate', $post->ID ) ) return;
 
         $uri     = add_query_arg( array( 'action' => 'bbpvotes_post_vote_down', 'post_id' => $post->ID ) );
         $uri     = wp_nonce_url( $uri, 'vote-down-post_' . $post->ID );
@@ -222,17 +235,8 @@ function bbpvotes_has_user_voted_down_for_post( $post_id = null, $user_id = 0 ){
  */
 
 function bbpvotes_get_votes_count_for_post( $post_id = null ){
-    
-    $result = false;
-    
-    $votes_up = count(bbpvotes_get_votes_up_for_post($post_id));
-    $votes_down = count(bbpvotes_get_votes_down_for_post($post_id));
-    
-    if ($votes_up || $votes_down){
-        $result = (int)($votes_up + $votes_down);
-    }
-
-    return apply_filters('bbpvotes_get_votes_count_for_post',$result,$post_id);
+    $count = count(bbpvotes_get_votes_for_post($post_id));
+    return apply_filters('bbpvotes_get_votes_count_for_post',$count,$post_id);
     
 }
 
@@ -244,69 +248,49 @@ function bbpvotes_get_votes_count_for_post( $post_id = null ){
 
 function bbpvotes_get_votes_score_for_post( $post_id = null ){
     
-    $result = false;
+    $total = 0;
     
-    $votes_up = count(bbpvotes_get_votes_up_for_post($post_id));
-    $votes_down = count(bbpvotes_get_votes_down_for_post($post_id));
-    
-    if ($votes_up || $votes_down){
-        $result = (int)($votes_up - $votes_down);
+    $votes = bbpvotes_get_votes_for_post($post_id);
+
+    foreach ((array)$votes as $user_id=>$score){
+        $total+=$score;
     }
 
-    return apply_filters('bbpvotes_get_votes_score_for_post',$result,$post_id);
+    return apply_filters('bbpvotes_get_votes_score_for_post',$total,$post_id);
     
 }
 
-    /**
-     * Get array of positive votes for a post
-     * @param type $post_id
-     * @return array
-     */
+function bbpvotes_get_votes_for_post( $post_id = null) {
+    if (!$post_id) $post_id = get_the_ID();
 
-    function bbpvotes_get_votes_up_for_post( $post_id = null) {
-        if (!$post_id) $post_id = get_the_ID();
-        $votes = get_post_meta( $post_id, bbpvotes()->metaname_post_vote_up );
-        return apply_filters('bbpvotes_get_votes_up_for_post',$votes,$post_id);
+    $votes_up = get_post_meta( $post_id, bbpvotes()->metaname_post_vote_up );
+    $votes_down = get_post_meta( $post_id, bbpvotes()->metaname_post_vote_down );
+
+    $votes = array();
+
+    foreach ( (array) $votes_up as $user_id ) {
+        $votes[$user_id] = 1;
+    }
+
+    foreach ( (array) $votes_down as $user_id ) {
+        $votes[$user_id] = -1;
     }
     
-    /**
-     * Get array of negative votes for a post
-     * @param type $post_id
-     * @return array
-     */
+    return apply_filters('bbpvotes_get_votes_for_post',$votes,$post_id);
+    
+}
 
-    function bbpvotes_get_votes_down_for_post( $post_id = null) {
-        if (!$post_id) $post_id = get_the_ID();
-        $votes = get_post_meta( $post_id, bbpvotes()->metaname_post_vote_down );
-        return apply_filters('bbpvotes_get_votes_down_for_post',$votes,$post_id);
-    }
     
 function bbpvotes_get_post_votes_log( $post_id = 0 ) {
     
-        if (!bbpvotes_get_votes_score_for_post( $post_id )) return;
-        
-        $votes_up = bbpvotes_get_votes_up_for_post();
-        $votes_down = bbpvotes_get_votes_down_for_post();
-        
-        $votes = array();
-        
-        foreach ( (array) $votes_up as $user_id ) {
-            $votes[$user_id] = 1;
-        }
-        
-        foreach ( (array) $votes_down as $user_id ) {
-            $votes[$user_id] = -1;
-        }
-        
-        if (empty($votes)) return;
+        if (!$votes = bbpvotes_get_votes_for_post( $post_id )) return;
 
-        
         $r = "\n\n" . '<div id="bbpvotes-post-votes-log-' . esc_attr( $post_id ) . '" class="bbpvotes-post-votes-log">' . "\n\n";
 
         foreach ( $votes as $user_id => $score ) {
             
             $user_id = bbp_get_user_id( $user_id );
-            $user = get_userdata( $user_id );
+            if (!$user = get_userdata( $user_id )) continue;
 
             if ($score>0){
                 $title = sprintf( esc_html__( '%1$s voted up', 'bbpvotes' ), $user->display_name);

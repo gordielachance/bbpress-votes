@@ -18,7 +18,7 @@ a.bbpvotes-post-vote-link.error .bbpvotes-icon-error{
 #bbpress-forums .bbpvotes-post-votes-log a{
     position:relative;
     display:inline-block!important;
-    margin:2.5px;
+    margin:2.5px!important;
     width:30px;
     height:30px;
 }

@@ -20,9 +20,9 @@ function bbpvotes_post_vote(){
     if( ! wp_verify_nonce( $_POST['_wpnonce'], $nonce ) ) return false;
     
     if ( $action=='bbpvotes_post_vote_up' ){
-        $vote = bbpvotes()->do_post_vote_up($post_id);
+        $vote = bbpvotes()->do_post_vote($post_id,true);
     }else if ( $action=='bbpvotes_post_vote_down' ){
-        $vote = bbpvotes()->do_post_vote_down($post_id);
+        $vote = bbpvotes()->do_post_vote($post_id,false);
     }
 
     if ( !is_wp_error( $vote ) ) {
