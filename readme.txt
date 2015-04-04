@@ -42,6 +42,8 @@ Upload the plugin to your blog and Activate it.
 
 == Changelog ==
 
+= 1.0.1 =
+* Minor fixes
 = 1.0 =
 * First release
 
