@@ -38,16 +38,13 @@ class bbP_Votes {
 	public $plugin_dir = '';
         
 	/**
-	 * @public name of the var used for plugin's actions
-	 */
-	public $action_varname = 'bbpvotes_action';
-        
-	/**
 	 * @public meta name for post votes
 	 */
 	public $metaname_post_vote_up = 'bbpvotes_vote_up';
         public $metaname_post_vote_down = 'bbpvotes_vote_down';
         public $metaname_options = 'bbpvotes_options';
+        
+        public $supported_post_types;
         
 	/**
 	 * @var The one true Instance
@@ -156,7 +153,7 @@ class bbP_Votes {
 
         
 	function register_scripts_styles(){
-            wp_register_style('bbpvotes', $this->plugin_url . '_inc/bbpvotes.css',false,$this->version);
+            wp_register_style('bbpvotes', $this->plugin_url . '_inc/css/bbpvotes.css',false,$this->version);
             wp_register_style('font-awesome', '//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css',false,'4.3.0');
             wp_register_script('bbpvotes', $this->plugin_url . '_inc/js/bbpvotes.js',array('jquery'),$this->version);
 	}
