@@ -36,6 +36,12 @@ very welcome.
 
 Upload the plugin to your blog and Activate it.
 
+== Frequently Asked Questions ==
+
+= I can’t see the vote links =
+
+Users cannot vote for themselves.  If you are the author of a topic and reply, the vote links won’t be available; the score only will be shown.
+
 == Screenshots ==
 
 1. A single reply with score, vote up and vote down links (top) and vote log (after reply content)
