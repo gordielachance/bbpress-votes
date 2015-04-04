@@ -20,15 +20,15 @@ jQuery(document).ready(function($){
             data:ajax_data,
             dataType: 'json',
             beforeSend: function() {
-                link.removeClass('.loading .success .error');
-                link.addClass('loading');
+                link.removeClass('.bbpvotes-db-loading .bbpvotes-db-success .bbpvotes-db-error');
+                link.addClass('bbpvotes-db-loading');
             },
             success: function(data){
                 if (data.success == false) {
-                    link.addClass('error');
+                    link.addClass('bbpvotes-db-error');
                     console.log(data.message);
                 }else if (data.success == true) {
-                    link.addClass('success');
+                    link.addClass('bbpvotes-db-success');
                     
                     var scoreLink = admin_links.find('.bbpvotes-post-score-link');
                     if (data.score_text) scoreLink.text(data.score_text);
@@ -46,12 +46,12 @@ jQuery(document).ready(function($){
                 }
             },
             error: function (xhr, ajaxOptions, thrownError) {
-                link.addClass('error');
+                link.addClass('bbpvotes-db-error');
                 console.log(xhr.status);
                 console.log(thrownError);
             },
             complete: function() {
-                link.removeClass('loading');
+                link.removeClass('bbpvotes-db-loading');
             }
         });
         

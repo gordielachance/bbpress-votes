@@ -1,9 +1,9 @@
 a.bbpvotes-post-vote-link .bbpvotes-icon{
     display:none;
 }
-a.bbpvotes-post-vote-link.loading .bbpvotes-icon-loading,
-a.bbpvotes-post-vote-link.success .bbpvotes-icon-success,
-a.bbpvotes-post-vote-link.error .bbpvotes-icon-error{
+a.bbpvotes-post-vote-link.bbpvotes-db-loading .bbpvotes-icon-loading,
+a.bbpvotes-post-vote-link.bbpvotes-db-success .bbpvotes-icon-success,
+a.bbpvotes-post-vote-link.bbpvotes-db-error .bbpvotes-icon-error{
     display:inherit;
 }
 
@@ -25,6 +25,9 @@ a.bbpvotes-post-vote-link.error .bbpvotes-icon-error{
 
 #bbpress-forums .bbpvotes-post-votes-log a img{
     display:inline!important;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
 }
 
 #bbpress-forums .bbpvotes-post-votes-log a .bbpvotes-avatar-icon-vote{

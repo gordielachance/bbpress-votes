@@ -7,18 +7,18 @@ Tested up to: 4.1.1
 Stable tag: trunk
 License: GPLv2 or later
 
-Allow users to vote up or down to topics and replies inside bbPress, just like you can on StackOverflow for example.
+Allows logged to vote up or down to topics and replies inside bbPress, just like you can on StackOverflow for example.
 
 == Description ==
 
-Allow users to vote up or down to topics and replies inside bbPress, just like you can on StackOverflow for example.
+Allows logged users to vote up or down to topics and replies inside bbPress, just like you can on StackOverflow for example.
 
 *   Ajaxed
 *   Compatible with BuddyPress
 *   Hooks and filters to extend the plugin
 
 = Demo =
-See it in action [here](www.pencil2d.org/?post_type=forum).
+See it in action [here](http://www.pencil2d.org/?post_type=forum).
 
 = Contributors =
 [Contributors are listed
