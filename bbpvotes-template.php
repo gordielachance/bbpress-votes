@@ -301,7 +301,12 @@ function bbpvotes_get_post_votes_log( $post_id = 0 ) {
 
 
             $user_avatar = get_avatar( $user_id, 30 );
-            $user_vote_link = '<a title="'.$title.'" href="' . esc_url( bbp_get_user_profile_url( $user_id ) ) . '">' . $user_avatar . $icon;
+            $user_vote_link = sprintf( '<a title="%1$s" href="%2$s">%3$s</a>',
+            	$title,
+            	esc_url( bbp_get_user_profile_url( $user_id ) ),
+            	$user_avatar . $icon
+            );
+            
             $r.= apply_filters('bbpvotes_get_post_votes_log_user',$user_vote_link,$user_id,$score);
         }
         
