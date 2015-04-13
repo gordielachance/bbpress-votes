@@ -25,9 +25,8 @@ function bbpvotes_get_score_link( $args = '' ) {
         
         );
         
-        if ( $score === false ) $link_classes[] = 'bbpvotes-post-no-score';
+        if ( !$votes_count ) $link_classes[] = 'bbpvotes-post-no-score';
 
-        //if ( empty( $post ) || !current_user_can( 'moderate', $post->ID ) ) return;
         $retval  = $r['link_before'] . '<a href="#" title="' . $r['title'] . '"'.bbpvotes_classes_attr($link_classes).'>' . $r['text'] . '</a>' . $r['link_after'];
 
         return apply_filters( 'bbpvotes_get_vote_up_link', $retval, $r );

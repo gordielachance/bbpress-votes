@@ -7,7 +7,7 @@ Tested up to: 4.1.1
 Stable tag: trunk
 License: GPLv2 or later
 
-Allows logged to vote up or down to topics and replies inside bbPress, just like you can on StackOverflow for example.
+Allows logged users to vote up or down to topics and replies inside bbPress, just like you can on StackOverflow for example.
 
 == Description ==
 
@@ -16,6 +16,7 @@ Allows logged users to vote up or down to topics and replies inside bbPress, jus
 *   Ajaxed
 *   Compatible with BuddyPress
 *   Hooks and filters to extend the plugin
+*   Votes log with users icons
 
 = Demo =
 See it in action [here](http://www.pencil2d.org/?post_type=forum).
@@ -40,7 +41,7 @@ Upload the plugin to your blog and Activate it.
 
 = I can’t see the vote links =
 
-Users cannot vote for themselves.  If you are the author of a topic and reply, the vote links won’t be available; the score only will be shown.
+Users cannot vote for themselves.  If you are the author of a topic or reply, the vote links won’t be available; the score only will be shown.
 
 == Screenshots ==
 
