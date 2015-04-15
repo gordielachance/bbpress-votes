@@ -16,7 +16,7 @@ jQuery(document).ready(function($){
         $.ajax({
     
             type: "post",
-            url: ajaxurl,
+            url: bbpvotesL10n.ajaxurl,
             data:ajax_data,
             dataType: 'json',
             beforeSend: function() {

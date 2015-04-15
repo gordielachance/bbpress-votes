@@ -49,6 +49,8 @@ Users cannot vote for themselves.  If you are the author of a topic or reply, th
 
 == Changelog ==
 
+= 1.0.3 =
+* Replaced ajaxurl with bbpvotesL10n.ajaxurl in bbpvotes.js
 = 1.0.2 =
 * Fixed $user_vote_link link in bbpvotes_get_post_votes_log()
 * Fixed ‘bbpvotes-post-no-score’ class in bbpvotes_get_score_link()
