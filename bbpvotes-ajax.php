@@ -1,6 +1,6 @@
 <?php
 
-function bbpvotes_post_vote(){
+function bbpvotes_post_vote_ajax(){
     
     $result = array(
             'success'   => false
@@ -41,8 +41,15 @@ function bbpvotes_post_vote(){
   
 }
 
+function bbpvotes_get_votes_log_ajax(){
+    if (!isset($_POST['post_id'])) return false;
+    echo bbpvotes_get_post_votes_log( $_POST['post_id'] );
+    die();
+}
 
-add_action('wp_ajax_bbpvotes_post_vote_up', 'bbpvotes_post_vote');
-add_action('wp_ajax_bbpvotes_post_vote_down', 'bbpvotes_post_vote');
+
+add_action('wp_ajax_bbpvotes_post_vote_up', 'bbpvotes_post_vote_ajax');
+add_action('wp_ajax_bbpvotes_post_vote_down', 'bbpvotes_post_vote_ajax');
+add_action('wp_ajax_bbpvotes_get_votes_log', 'bbpvotes_get_votes_log_ajax');
 
 ?>

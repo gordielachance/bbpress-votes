@@ -3,7 +3,7 @@ Contributors:grosbouff
 Donate link:http://bit.ly/gbreant
 Tags: bbPress, vote, votes, rate, rating, ratings, BuddyPress
 Requires at least: 4.1.1
-Tested up to: 4.1.1
+Tested up to: 4.2
 Stable tag: trunk
 License: GPLv2 or later
 
@@ -43,12 +43,20 @@ Upload the plugin to your blog and Activate it.
 
 Users cannot vote for themselves.  If you are the author of a topic or reply, the vote links won’t be available; the score only will be shown.
 
+= How can I translate this plugin in my language ? =
+
+You can help translate the plugin on [oneskyapp](http://osjxryl.oneskyapp.com/admin/project/dashboard/project/63465) !
+
 == Screenshots ==
 
 1. A single reply with score, vote up and vote down links (top) and vote log (after reply content)
 
 == Changelog ==
 
+= 1.0.4 =
+* Append votes log with ajax when user has voted
+* French translation
+* Added pot files for translations
 = 1.0.3 =
 * Replaced ajaxurl with bbpvotesL10n.ajaxurl in bbpvotes.js
 = 1.0.2 =
