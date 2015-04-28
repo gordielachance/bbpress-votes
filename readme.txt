@@ -47,6 +47,17 @@ Users cannot vote for themselves.  If you are the author of a topic or reply, th
 
 You can help translate the plugin on [oneskyapp](http://osjxryl.oneskyapp.com/admin/project/dashboard/project/63465) !
 
+= How can I customize the look of the vote links ? =
+
+The best way to customize the links is to setup some CSS rules in your theme.
+Check [this example on CodePen](http://codepen.io/anon/pen/KpwrMp) to see how to have images displayed instead of text.
+
+If you need more complex customization, you can filter the links using those hooks :
+
+*   bbpvotes_get_vote_up_link
+*   bbpvotes_get_vote_down_link
+*   bbpvotes_get_vote_score_link
+
 == Screenshots ==
 
 1. A single reply with score, vote up and vote down links (top) and vote log (after reply content)
