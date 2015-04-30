@@ -29,7 +29,7 @@ function bbpvotes_get_score_link( $args = '' ) {
 
         $retval  = $r['link_before'] . '<a href="#" title="' . $r['title'] . '"'.bbpvotes_classes_attr($link_classes).'>' . $r['text'] . '</a>' . $r['link_after'];
 
-        return apply_filters( 'bbpvotes_get_vote_up_link', $retval, $r );
+        return apply_filters( 'bbpvotes_get_score_link', $retval, $r );
 }
 
 function bbpvotes_get_link_icons(){
