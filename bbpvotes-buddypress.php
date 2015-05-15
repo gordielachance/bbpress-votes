@@ -78,7 +78,9 @@ function bbpvotes_buddypress_voted_activity($post_id,$user_id,$vote){
     }
      */
 
-    bp_activity_add( $args );
+    if(function_exists('bp_activity_add')){
+        bp_activity_add( $args );
+    }
 }
 
 
