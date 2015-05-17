@@ -3,7 +3,7 @@ Contributors:grosbouff
 Donate link:http://bit.ly/gbreant
 Tags: bbPress, vote, votes, rate, rating, ratings, BuddyPress
 Requires at least: 4.1.1
-Tested up to: 4.2
+Tested up to: 4.2.2
 Stable tag: trunk
 License: GPLv2 or later
 
@@ -64,17 +64,24 @@ If you need more complex customization, you can filter the links using those hoo
 
 == Changelog ==
 
+= 1.0.5 =
+* Fixed crash when BuddyPress is not installed
+
 = 1.0.4 =
 * Append votes log with ajax when user has voted
 * French translation
 * Added pot files for translations
+
 = 1.0.3 =
 * Replaced ajaxurl with bbpvotesL10n.ajaxurl in bbpvotes.js
+
 = 1.0.2 =
 * Fixed $user_vote_link link in bbpvotes_get_post_votes_log()
 * Fixed ‘bbpvotes-post-no-score’ class in bbpvotes_get_score_link()
+
 = 1.0.1 =
 * Minor fixes
+
 = 1.0 =
 * First release
 
