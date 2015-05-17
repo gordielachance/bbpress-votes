@@ -262,8 +262,8 @@ function bbpvotes_get_votes_score_for_post( $post_id = null ){
 function bbpvotes_get_votes_for_post( $post_id = null) {
     if (!$post_id) $post_id = get_the_ID();
 
-    $votes_up = get_post_meta( $post_id, bbpvotes()->metaname_post_vote_up );
-    $votes_down = get_post_meta( $post_id, bbpvotes()->metaname_post_vote_down );
+    $votes_up = bbpvotes_get_votes_up_for_post( $post_id );
+    $votes_down = bbpvotes_get_votes_down_for_post( $post_id );
 
     $votes = array();
 
@@ -277,6 +277,16 @@ function bbpvotes_get_votes_for_post( $post_id = null) {
     
     return apply_filters('bbpvotes_get_votes_for_post',$votes,$post_id);
     
+}
+
+function bbpvotes_get_votes_up_for_post( $post_id = null) {
+    if (!$post_id) $post_id = get_the_ID();
+    return get_post_meta( $post_id, bbpvotes()->metaname_post_vote_up );
+}
+
+function bbpvotes_get_votes_down_for_post( $post_id = null) {
+    if (!$post_id) $post_id = get_the_ID();
+    return get_post_meta( $post_id, bbpvotes()->metaname_post_vote_down );
 }
 
     
