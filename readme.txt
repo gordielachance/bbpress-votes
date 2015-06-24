@@ -17,6 +17,7 @@ Allows logged users to vote up or down to topics and replies inside bbPress, jus
 *   Compatible with BuddyPress
 *   Hooks and filters to extend the plugin
 *   Votes log with users icons
+*   Allow to filter a query to sort posts by votes, see FAQ.
 
 = Demo =
 See it in action [here](http://www.pencil2d.org/?post_type=forum).
@@ -43,6 +44,12 @@ Upload the plugin to your blog and Activate it.
 
 Users cannot vote for themselves.  If you are the author of a topic or reply, the vote links won’t be available; the score only will be shown.
 
+= Can I filter the query to sort posts by votes ? =
+
+Yes, you can sort the posts by score or votes count, using the query variable 'vote_sort'.
+Allowed values are 'score_desc', 'score_asc', 'count_desc', 'count_asc'.
+See function sort_by_votes() for more details.
+
 = How can I translate this plugin in my language ? =
 
 You can help translate the plugin on [oneskyapp](http://osjxryl.oneskyapp.com/admin/project/dashboard/project/63465) !
@@ -63,6 +70,10 @@ If you need more complex customization, you can filter the links using those hoo
 1. A single reply with score, vote up and vote down links (top) and vote log (after reply content)
 
 == Changelog ==
+
+= 1.0.6 =
+* Added two meta keys : 'bbpvotes_vote_score' (total score) and 'bbpvotes_vote_count' (total votes).
+* Filter query to sort items by score or votes count.
 
 = 1.0.5 =
 * Fixed crash when BuddyPress is not installed

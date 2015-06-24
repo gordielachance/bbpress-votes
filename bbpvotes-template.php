@@ -228,14 +228,14 @@ function bbpvotes_has_user_voted_down_for_post( $post_id = null, $user_id = 0 ){
 }
 
 /**
- * Get votes count for a post
+ * Get the number of votes for a post
  * @param type $post_id
  * @return int
  */
 
 function bbpvotes_get_votes_count_for_post( $post_id = null ){
-    $count = count(bbpvotes_get_votes_for_post($post_id));
-    return apply_filters('bbpvotes_get_votes_count_for_post',$count,$post_id);
+    if (!$post_id) $post_id = get_the_ID();
+    return get_post_meta( $post_id, bbpvotes()->metaname_post_vote_count, true );
     
 }
 
@@ -247,17 +247,15 @@ function bbpvotes_get_votes_count_for_post( $post_id = null ){
 
 function bbpvotes_get_votes_score_for_post( $post_id = null ){
     
-    $total = 0;
-    
-    $votes = bbpvotes_get_votes_for_post($post_id);
-
-    foreach ((array)$votes as $user_id=>$score){
-        $total+=$score;
-    }
-
-    return apply_filters('bbpvotes_get_votes_score_for_post',$total,$post_id);
+    if (!$post_id) $post_id = get_the_ID();
+    return get_post_meta( $post_id, bbpvotes()->metaname_post_vote_score, true );
     
 }
+
+/*
+ * Get detailed array of votes for this post.
+ * To get only the post score, use bbpvotes_get_votes_score_for_post().
+ */
 
 function bbpvotes_get_votes_for_post( $post_id = null) {
     if (!$post_id) $post_id = get_the_ID();

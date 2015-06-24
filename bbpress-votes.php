@@ -4,7 +4,7 @@ Plugin Name: bbPress Votes
 Plugin URI: http://wordpress.org/extend/plugins/bbpress-pencil-unread
 Description: Allow users to vote up or down to topics and replies inside bbPress, just like you can on StackOverflow for example.
 Author: G.Breant
-Version: 1.0.5
+Version: 1.0.6
 Author URI: http://sandbox.pencil2d.org/
 License: GPL2+
 Text Domain: bbpvotes
@@ -17,12 +17,12 @@ class bbP_Votes {
         /**
 	 * @public string plugin version
 	 */
-	public $version = '1.0.5';
+	public $version = '1.0.6';
         
 	/**
 	 * @public string plugin DB version
 	 */
-	public $db_version = '100';
+	public $db_version = '101';
 	
 	/** Paths *****************************************************************/
 	
@@ -40,9 +40,13 @@ class bbP_Votes {
 	/**
 	 * @public meta name for post votes
 	 */
+        public $metaname_post_vote_score = 'bbpvotes_vote_score';
+        public $metaname_post_vote_count = 'bbpvotes_vote_count';
 	public $metaname_post_vote_up = 'bbpvotes_vote_up';
         public $metaname_post_vote_down = 'bbpvotes_vote_down';
         public $metaname_options = 'bbpvotes_options';
+        
+        public $var_sort_by_vote = 'vote_sort';
         
         public $supported_post_types;
         
@@ -94,6 +98,7 @@ class bbP_Votes {
 	}
         
 	function includes(){
+            require( $this->plugin_dir . 'bbpvotes-functions.php');
             require( $this->plugin_dir . 'bbpvotes-template.php');
             require( $this->plugin_dir . 'bbpvotes-ajax.php');
             
@@ -112,13 +117,14 @@ class bbP_Votes {
             /*actions are hooked on bbp hooks so plugin will not crash if bbpress is not enabled*/
 
             add_action('bbp_loaded', array($this, 'load_plugin_textdomain'));     //localization
-            add_action('bbp_loaded', array($this, 'upgrade'));                  //upgrade
+            add_filter('query_vars', array(&$this,'register_query_vars' ));
 
             //scripts & styles
             add_action('bbp_init', array($this, 'register_scripts_styles'));
-            add_action('bbp_enqueue_scripts', array($this, 'scripts_styles'));
+            add_action('bbp_init', array($this, 'populate_post_types'), 9);
+            add_action('bbp_init', array($this, 'upgrade'));                  //upgrade
             
-            add_action('bbp_init', array($this, 'populate_post_types'));
+            add_action('bbp_enqueue_scripts', array($this, 'scripts_styles'));
 
             add_filter( 'bbp_topic_admin_links', array($this, 'vote_admin_link'), 10, 2);
             add_filter( 'bbp_reply_admin_links', array($this, 'vote_admin_link'), 10, 2);
@@ -128,12 +134,12 @@ class bbP_Votes {
             
             add_action( 'bp_include', array($this, 'includes_buddypress'));     //buddypress
             
+            add_action( 'pre_get_posts', array($this, 'sort_by_votes'));
+            
             add_action("wp", array(&$this,"process_vote_link"));    //vote without ajax
             
             add_action( 'delete_user', array(&$this,"delete_user_votes"));
-            
-
-            
+ 
 	}
 
 	function load_plugin_textdomain(){
@@ -151,7 +157,9 @@ class bbP_Votes {
 			//require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 			//dbDelta($sql);
 		}else{  //upgrade
-
+                    if ( $current_version < 101 ) {
+                        bbpvotes_rebuild_scores();
+                    }
                 }
 
 		//update DB version
@@ -183,6 +191,11 @@ class bbP_Votes {
             wp_enqueue_style('bbpvotes');
             wp_enqueue_style('font-awesome');
 	}
+        
+    function register_query_vars($vars) {
+        $vars[] = $this->var_sort_by_vote;
+        return $vars;
+    }
 
         function populate_post_types(){
             $this->supported_post_types = array(
@@ -246,6 +259,8 @@ class bbP_Votes {
             }
             
             //get current votes
+            $post_score = bbpvotes_get_votes_score_for_post( $post->ID );
+            $votes_count = bbpvotes_get_votes_count_for_post( $post->ID );
             $user_voted_up = bbpvotes_has_user_voted_up_for_post($post->ID,$user_id);
             $user_voted_down = bbpvotes_has_user_voted_down_for_post($post->ID,$user_id);
             
@@ -256,21 +271,93 @@ class bbP_Votes {
             
             //toggle vote so remove old vote
             if ( ($voteplus && $user_voted_down) || ($voteminus && $user_voted_up) ){
-                $previousvote = $this->metaname_post_vote_down; //negative key
-                if ($voteminus) $previousvote = $this->metaname_post_vote_up; //positive key
-                delete_post_meta($post->ID, $previousvote, $user_id);
+                
+                //get previous vote meta key
+                if ($user_voted_down){
+                    $meta_previous_vote = $this->metaname_post_vote_down;
+                }else{
+                    $meta_previous_vote = $this->metaname_post_vote_up;
+                }
+
+                if ( delete_post_meta($post->ID, $meta_previous_vote, $user_id) ){ //successfully deleted
+                    
+                    //restore score
+                    if ($user_voted_down){
+                        $post_score++;
+                    }else{
+                        $post_score--;
+                    }
+                    
+                }
             }
             
-            //insert new vote
-            $newvote = $this->metaname_post_vote_up; //positive key
-            if ($voteminus) $newvote = $this->metaname_post_vote_down; //negative key
-            if ( !$result = add_post_meta($post->ID, $newvote, $user_id) ){
+            //get new vote meta key
+            if ( $voteplus ){
+                $meta_vote = $this->metaname_post_vote_up;
+            }else{
+                $meta_vote = $this->metaname_post_vote_down;
+            }
+
+            if ( $result = add_post_meta($post->ID, $meta_vote, $user_id) ){
+                
+                $votes_count++;
+                
+                //update score
+                if ($voteplus){
+                    $post_score++;
+                }else{
+                    $post_score--;
+                }
+                
+                update_post_meta($post->ID, $this->metaname_post_vote_score, $post_score);
+                update_post_meta($post->ID, $this->metaname_post_vote_count, $votes_count);
+                
+            }else{
                 return new WP_Error( 'voting_error', __( 'Error while voting for this post', 'bbpvotes' ));
             }
             
             do_action('bbpvotes_do_post_vote',$post->ID,$user_id,$vote);
             
             return true;
+        }
+        
+        function sort_by_votes( $query ){
+            
+            if ( ( !$order = $query->get( $this->var_sort_by_vote ) ) || !in_array($query->get('post_type'),$this->supported_post_types) ) return $query;
+
+            switch ($order){
+                
+                case 'score_desc':
+
+                    $query->set('meta_key', $this->metaname_post_vote_score );
+                    $query->set('orderby','meta_value_num');
+                    $query->set('order', 'DESC');
+
+                break;
+
+                case 'score_asc':
+                    $query->set('meta_key', $this->metaname_post_vote_score );
+                    $query->set('orderby','meta_value_num');
+                    $query->set('order', 'ASC');
+                break;
+            
+                case 'count_desc':
+
+                    $query->set('meta_key', $this->bbpvotes_vote_count );
+                    $query->set('orderby','meta_value_num');
+                    $query->set('order', 'DESC');
+
+                break;
+
+                case 'count_asc':
+                    $query->set('meta_key', $this->bbpvotes_vote_count );
+                    $query->set('orderby','meta_value_num');
+                    $query->set('order', 'ASC');
+                break;
+            
+            }
+
+            return $query;
         }
         
 	//vote without ajax
@@ -298,11 +385,65 @@ class bbP_Votes {
                     self::do_post_vote($post_id,$vote);
             }
 	}
-        
+  
         function delete_user_votes( $user_id ) {
-            global $wpdb;
-            $wpdb->delete($wpdb->postmeta, array( 'meta_key' => $this->metaname_post_vote_up, 'meta_value' => $user_id ), array('%s', '%d'));
-            $wpdb->delete($wpdb->postmeta, array( 'meta_key' => $this->metaname_post_vote_down, 'meta_value' => $user_id ), array('%s', '%d'));
+            
+            self::delete_user_votes_type( $user_id, true);
+            self::delete_user_votes_type( $user_id, false);
+            
+        }
+        
+       /**
+         * Delete user votes by vote type (up or down) and update post score.
+         * @param type $user_id
+         * @param type $up
+         */
+
+        
+        function delete_user_votes_type( $user_id, $up = true){
+
+            //get individual posts
+            
+            if ($up){ //up votes
+                $meta_name = $this->metaname_post_vote_up;
+            }else{ //down votes
+                $meta_name = $this->metaname_post_vote_down;
+            }
+            
+            $user_votes_args = array(
+                'post_type'         => $this->supported_post_types,
+                'post_status'   => 'any',
+                'posts_per_page'    => -1,
+                'fields'            => 'ids',
+                'meta_query'        => array(
+                    array(
+                        'key'   => $meta_name,
+                        'value'	=> $user_id
+                    )
+                )
+            );
+            $user_voted_query = new WP_Query( $user_votes_args );
+
+            foreach ($user_voted_query->posts as $id){
+                
+                $post_score = bbpvotes_get_votes_score_for_post( $id );
+                $votes_count = bbpvotes_get_votes_count_for_post( $id );
+                
+                if ($up){ //up votes
+                    $post_score--;
+                }else{ //down votes
+                    $post_score++;
+                }
+                
+                $votes_count--;
+                
+                if ( delete_post_meta($id, $meta_name, $user_id) ){
+                    update_post_meta($id, $this->metaname_post_vote_score, $post_score);
+                    update_post_meta($id, $this->metaname_post_vote_count, $votes_count);
+                }
+
+            }
+
         }
         
         function post_content_append_votes_log( $content = '', $post_id = 0 ) {
