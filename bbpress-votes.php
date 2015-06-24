@@ -42,7 +42,7 @@ class bbP_Votes {
 	 */
         public $metaname_post_vote_score = 'bbpvotes_vote_score';
         public $metaname_post_vote_count = 'bbpvotes_vote_count';
-	public $metaname_post_vote_up = 'bbpvotes_vote_up';
+		public $metaname_post_vote_up = 'bbpvotes_vote_up';
         public $metaname_post_vote_down = 'bbpvotes_vote_down';
         public $metaname_options = 'bbpvotes_options';
         
@@ -343,14 +343,14 @@ class bbP_Votes {
             
                 case 'count_desc':
 
-                    $query->set('meta_key', $this->bbpvotes_vote_count );
+                    $query->set('meta_key', $this->metaname_post_vote_count );
                     $query->set('orderby','meta_value_num');
                     $query->set('order', 'DESC');
 
                 break;
 
                 case 'count_asc':
-                    $query->set('meta_key', $this->bbpvotes_vote_count );
+                    $query->set('meta_key', $this->metaname_post_vote_count );
                     $query->set('orderby','meta_value_num');
                     $query->set('order', 'ASC');
                 break;
