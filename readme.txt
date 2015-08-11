@@ -48,6 +48,19 @@ Users cannot vote for themselves.  If you are the author of a topic or reply, th
 
 Yes, you can sort the posts by score or votes count, using the query variable 'vote_sort'.
 Allowed values are 'score_desc', 'score_asc', 'count_desc', 'count_asc'.
+
+Example of a [query](https://codex.wordpress.org/Class_Reference/WP_Query) that will fetch the 5 last topics, ordered by score (desc) : 
+
+`<?php
+$best_rated_topics_args = array(
+  'post_type'       => bbp_topic_post_type(), //or 'topic'
+  'posts_per_page'  => 5,
+  'vote_sort'       => 'score_desc' //plugin
+);
+
+$best_rated_topics = new WP_Query( $best_rated_topics_args );
+?>`
+
 See function sort_by_votes() for more details.
 
 = How can I translate this plugin in my language ? =
