@@ -184,7 +184,7 @@ function bbpvotes_has_user_voted_up_for_post( $post_id = null, $user_id = 0 ){
 
     $args = array(
         'p'             => $post_id,
-        'post_type'	=> get_post_type($post_id), //TO FIX this should not be set to 'any' but does not work
+        'post_type'	=> get_post_type($post_id), //TO FIX this should not be set to 'any' but does not work - or eventually bbpvotes()->supported_post_types
         'post_status'   => 'any',
         'posts_per_page' => -1,
         'meta_query' => array(
@@ -324,6 +324,105 @@ function bbpvotes_get_post_votes_log( $post_id = 0 ) {
  
 }
 
+/**
+ * Get the count of down votes by user
+ * @param type $user_id
+ * @param type $args
+ * @return type
+ */
+
+function bbpvotes_get_votes_down_by_user_count( $user_id = 0, $args = null ){
+    
+    if (!$user_id) $user_id = get_current_user_id();
+    
+    $defaults = array(
+        'post_type'	=> bbpvotes()->supported_post_types,
+        'post_status'   => 'any',
+        'posts_per_page' => -1,
+        'meta_query' => array(
+            array(
+                    'key'     => bbpvotes()->metaname_post_vote_down,
+                    'value'   => $user_id,
+            ),
+        ),
+    );
+    
+    // Parse arguments against default values
+    $args = bbp_parse_args( $args, $defaults, 'bbpvotes_get_votes_down_by_user_count_args' );
+
+    $query = new WP_Query( $args );
+    return (int)$query->found_posts;
+}
+
+/**
+ * Get the count of down votes by user
+ * @param type $user_id
+ * @param type $args
+ * @return type
+ */
+
+function bbpvotes_get_votes_up_by_user_count( $user_id = 0, $args = null ){
+    
+    if (!$user_id) $user_id = get_current_user_id();
+    
+    $defaults = array(
+        'post_type'	=> bbpvotes()->supported_post_types,
+        'post_status'   => 'any',
+        'posts_per_page' => -1,
+        'meta_query' => array(
+            array(
+                    'key'     => bbpvotes()->metaname_post_vote_up,
+                    'value'   => $user_id,
+            ),
+        ),
+    );
+    
+    // Parse arguments against default values
+    $args = bbp_parse_args( $args, $defaults, 'bbpvotes_get_votes_up_by_user_count_args' );
+
+    $query = new WP_Query( $args );
+    return (int)$query->found_posts;
+}
+
+/**
+ * Get the total count of votes by user
+ * @param type $user_id
+ * @return type
+ */
+
+function bbpvotes_get_votes_total_by_user_count( $user_id = 0 ){
+    $votes_up = bbpvotes_get_votes_up_by_user_count($user_id);
+    $votes_down = bbpvotes_get_votes_down_by_user_count($user_id);
+    
+    return (int)($votes_up+$votes_down);
+}
+
+
+function bbpvotes_get_votes_up_for_author_count( $author_id = 0, $args = null ){
+    if (!$author_id) $author_id = get_current_user_id();
+    
+    $defaults = array(
+        'author'        => $author_id,
+        'post_type'	=> bbpvotes()->supported_post_types,
+        'post_status'   => 'any',
+        'posts_per_page' => -1/*,
+        
+        'meta_query' => array(
+            array(
+                    'key'     => bbpvotes()->metaname_post_vote_up
+            ),
+        ),*/
+    );
+    
+    // Parse arguments against default values
+    $args = bbp_parse_args( $args, $defaults, 'bbpvotes_get_votes_up_for_author_count_args' );
+    
+    $query = new WP_Query( $args );
+    
+    print_r($args);die();
+    
+    return (int)$query->found_posts;
+}
 
 function bbpvotes_classes_attr($classes=false){
     if (!$classes) return false;

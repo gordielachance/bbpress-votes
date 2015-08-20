@@ -3,7 +3,7 @@ Contributors:grosbouff
 Donate link:http://bit.ly/gbreant
 Tags: bbPress, vote, votes, rate, rating, ratings, BuddyPress
 Requires at least: 4.1.1
-Tested up to: 4.2.2
+Tested up to: 4.3
 Stable tag: trunk
 License: GPLv2 or later
 
@@ -83,6 +83,9 @@ If you need more complex customization, you can filter the links using those hoo
 1. A single reply with score, vote up and vote down links (top) and vote log (after reply content)
 
 == Changelog ==
+
+= 1.0.7 =
+* new functions to get votes count by user : bbpvotes_get_votes_down_by_user_count(), bbpvotes_get_votes_up_by_user_count(), bbpvotes_get_votes_total_by_user_count()
 
 = 1.0.6 =
 * Added two meta keys : 'bbpvotes_vote_score' (total score) and 'bbpvotes_vote_count' (total votes).

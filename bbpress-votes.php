@@ -4,7 +4,7 @@ Plugin Name: bbPress Votes
 Plugin URI: http://wordpress.org/extend/plugins/bbpress-pencil-unread
 Description: Allow users to vote up or down to topics and replies inside bbPress, just like you can on StackOverflow for example.
 Author: G.Breant
-Version: 1.0.6
+Version: 1.0.7
 Author URI: http://sandbox.pencil2d.org/
 License: GPL2+
 Text Domain: bbpvotes
@@ -17,7 +17,7 @@ class bbP_Votes {
         /**
 	 * @public string plugin version
 	 */
-	public $version = '1.0.6';
+	public $version = '1.0.7';
         
 	/**
 	 * @public string plugin DB version
@@ -139,8 +139,15 @@ class bbP_Votes {
             add_action("wp", array(&$this,"process_vote_link"));    //vote without ajax
             
             add_action( 'delete_user', array(&$this,"delete_user_votes"));
- 
+            
+            add_action("wp", array(&$this,"caca"));    //vote without ajax
+
 	}
+        
+        function caca(){
+            print_r(bbpvotes_get_votes_up_for_author_count(391));
+            die();
+        }
 
 	function load_plugin_textdomain(){
 		load_plugin_textdomain('bbpvotes', FALSE, $this->plugin_dir.'languages/');
