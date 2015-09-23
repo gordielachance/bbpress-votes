@@ -4,7 +4,7 @@ Plugin Name: bbPress Votes
 Plugin URI: http://wordpress.org/extend/plugins/bbpress-pencil-unread
 Description: Allow users to vote up or down to topics and replies inside bbPress, just like you can on StackOverflow for example.
 Author: G.Breant
-Version: 1.0.6
+Version: 1.0.7
 Author URI: http://sandbox.pencil2d.org/
 License: GPL2+
 Text Domain: bbpvotes
@@ -17,7 +17,7 @@ class bbP_Votes {
         /**
 	 * @public string plugin version
 	 */
-	public $version = '1.0.6';
+	public $version = '1.0.7';
         
 	/**
 	 * @public string plugin DB version
@@ -42,7 +42,7 @@ class bbP_Votes {
 	 */
         public $metaname_post_vote_score = 'bbpvotes_vote_score';
         public $metaname_post_vote_count = 'bbpvotes_vote_count';
-		public $metaname_post_vote_up = 'bbpvotes_vote_up';
+        public $metaname_post_vote_up = 'bbpvotes_vote_up';
         public $metaname_post_vote_down = 'bbpvotes_vote_down';
         public $metaname_options = 'bbpvotes_options';
         
@@ -132,6 +132,9 @@ class bbP_Votes {
             add_filter( 'bbp_get_reply_content', array($this, 'post_content_append_votes_log'),  98,  2 );
             add_filter( 'bbp_get_topic_content', array($this, 'post_content_append_votes_log'),  98,  2 );
             
+            add_filter( 'bbp_get_reply_author_link', array($this, 'author_link_karma'),  10,  2 );
+            //add_filter( 'bbp_get_topic_author_link', array($this, 'author_link_karma'),  10,  2 );
+            
             add_action( 'bp_include', array($this, 'includes_buddypress'));     //buddypress
             
             add_action( 'pre_get_posts', array($this, 'sort_by_votes'));
@@ -139,8 +142,22 @@ class bbP_Votes {
             add_action("wp", array(&$this,"process_vote_link"));    //vote without ajax
             
             add_action( 'delete_user', array(&$this,"delete_user_votes"));
- 
+
 	}
+        
+        //add karma after topic author link
+        
+        function author_link_karma($author_link, $args){
+            
+            $author_links = array($author_link);
+
+            $karma = bbpvotes_get_author_score( bbp_get_reply_author_id() );
+            
+            $author_link .= sprintf( '<div class="bbpvotes-author-karma">%s</div>', sprintf(__('%d pts','bbpvotes'),$karma) );
+            
+            return $author_link;
+
+        }
 
 	function load_plugin_textdomain(){
 		load_plugin_textdomain('bbpvotes', FALSE, $this->plugin_dir.'languages/');
