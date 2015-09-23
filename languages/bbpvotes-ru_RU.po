@@ -5,121 +5,137 @@ msgstr ""
 "PO-Revision-Date: 2015-09-23 12:55+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE TEAM <EMAIL@ADDRESS>\n"
-"Language: fr_FR\n"
+"Language: ru_RU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 
 #: bbpress-votes.php:169 bbpvotes-template.php:11 bbpvotes-template.php:67
 msgid "Vote up"
-msgstr "Voter 'pour'"
+msgstr "Мне нравится"
 
 #: bbpress-votes.php:170 bbpvotes-template.php:117
 msgid "Vote down"
-msgstr "Voter 'contre'"
+msgstr "Мне не нравится"
 
 #: bbpress-votes.php:171 bbpvotes-template.php:95
 msgid "You voted up"
-msgstr "Vous avez voté 'pour'"
+msgstr "Вам понравилось это"
 
 #: bbpress-votes.php:172 bbpvotes-template.php:145
 msgid "You voted down"
-msgstr "Vous avez voté 'contre'"
+msgstr "Вам не понравилось это"
 
 #: bbpress-votes.php:223 bbpvotes-buddypress.php:12
 msgid "Vote is not a boolean"
-msgstr "La variable vote n'est pas booléenne"
+msgstr "Голосование не логично"
 
 #: bbpress-votes.php:230
 msgid "You don't have the required capability to vote"
-msgstr "Vous n'avez pas l'autorisation de voter"
+msgstr "Вы не имеете возможность голосовать"
 
 #: bbpress-votes.php:238
 msgid "You cannot vote for your own post"
-msgstr "Vous ne pouvez pas voter pour votre propre article"
+msgstr "Вы не можете голосовать за свой пост"
 
 #: bbpress-votes.php:247
 msgid "You have already voted for this post"
-msgstr "Vous avez déjà voté pour cet article"
+msgstr "Вы уже голосовали за этот пост"
 
 #: bbpress-votes.php:261
 msgid "Error while voting for this post"
-msgstr "Erreur lors du vote"
+msgstr "Ошибка при голосовании на этот пост"
 
 #: bbpvotes-admin.php:55
 msgid "Settings"
-msgstr "Paramètres"
+msgstr "Настройки"
 
 #: bbpvotes-admin.php:73 bbpvotes-admin.php:105
 msgid "Score"
-msgstr "Score"
+msgstr "Оценка"
 
 #: bbpvotes-ajax.php:32 bbpvotes-template.php:19
 msgid "Score: %1$d"
-msgstr "Score: %1$d"
+msgstr "Оценка: %1$d"
 
 #: bbpvotes-ajax.php:33 bbpvotes-template.php:20
 msgid "Votes count: %1$d"
-msgstr "Nombre de votes: %1$d"
+msgstr "Голосов: %1$d"
 
 #: bbpvotes-buddypress.php:5
 msgid "New vote up"
-msgstr "Nouveau vote 'pour'"
+msgstr "Новый лайк"
 
 #: bbpvotes-buddypress.php:6
 msgid "New vote down"
-msgstr "Nouveau vote 'contre'"
+msgstr "Новый дизлайк"
 
 #: bbpvotes-buddypress.php:44
 msgid "%1$s voted up to the topic %2$s by %3$s"
-msgstr "%1$s a voté 'pour' à la discussion %2$s par %3$s"
+msgstr "%1$s понравилась тема %2$s от %3$s"
 
 #: bbpvotes-buddypress.php:46
 msgid "%1$s voted up to a reply by %3$s in the topic %2$s"
-msgstr "%1$s a voté 'pour' à une réponse de %3$s à la discussion %2$s"
+msgstr "%1$s понравился ответ %3$s в теме %2$s"
 
 #: bbpvotes-buddypress.php:55
 msgid "%1$s voted down to the topic %2$s by %3$s"
-msgstr "%1$s a voté 'contre' à la discussion %2$s par %3$s"
+msgstr "%1$s не понравилась тема %2$s от %3$s"
 
 #: bbpvotes-buddypress.php:57
 msgid "%1$s voted down to a reply by %3$s in the topic %2$s"
-msgstr "%1$s a voté 'contre' à une réponse de %3$s à la discussion %2$s"
+msgstr "%1$s не понравился ответ %3$s в теме %2$s"
 
 #: bbpvotes-template.php:86
 msgid "This topic is useful and clear"
-msgstr "Cette discussion est utile et claire"
+msgstr "Эта тема полезна"
 
 #: bbpvotes-template.php:89
 msgid "This reply is useful"
-msgstr "Cette réponse est utile"
+msgstr "Этот ответ полезен"
 
 #: bbpvotes-template.php:96
 msgid "You have voted up for this post"
-msgstr "Vous avez voté pour cet article"
+msgstr "Вам понравился этот пост "
 
 #: bbpvotes-template.php:136
 msgid "This topic it is unclear or not useful"
-msgstr "Cette discussion n'est pas claire ou est inutile"
+msgstr "Эта тема бесполезна"
 
 #: bbpvotes-template.php:139
 msgid "This reply answer is not useful"
-msgstr "Cette réponse n'est pas utile"
+msgstr "Этот ответ бесполезен"
 
 #: bbpvotes-template.php:146
 msgid "You have voted down for this post"
-msgstr "Vous avez voté 'contre' à cet article"
+msgstr "Вам не понравился этот пост"
 
 #: bbpvotes-template.php:295
 msgid "%1$s voted up"
-msgstr "%1$s a voté 'pour'"
+msgstr "%1$s лайков"
 
 #: bbpvotes-template.php:298
 msgid "%1$s voted down"
-msgstr "%1$s a voté 'contre'"
+msgstr "%1$s дизлайков"
+
+#. Plugin Name of the plugin/theme
+msgid "bbPress Votes"
+msgstr "bbPress Голосование"
+
+#. Plugin URI of the plugin/theme
+msgid "http://wordpress.org/extend/plugins/bbpress-pencil-unread"
+msgstr "http://wordpress.org/extend/plugins/bbpress-pencil-unread"
 
 #. Description of the plugin/theme
 msgid "Allow users to vote up or down to topics and replies inside bbPress, just like you can on StackOverflow for example."
-msgstr "Permet à vos utilisateurs de voter 'pour' ou 'contre' sur des discussions et réponses dans bbPress, comme vous pouvez le faire sur StackOverfl"
+msgstr "Разрешить пользователям голосовать вверх или вниз за темы и ответы внутри bbPress, так же, как вы можете на StackOverflow, например."
+
+#. Author of the plugin/theme
+msgid "G.Breant"
+msgstr "G.Breant"
+
+#. Author URI of the plugin/theme
+msgid "http://sandbox.pencil2d.org/"
+msgstr "http://sandbox.pencil2d.org/"
 
