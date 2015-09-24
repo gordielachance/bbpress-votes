@@ -18,6 +18,7 @@ Allows logged users to vote up or down to topics and replies inside bbPress, jus
 *   Hooks and filters to extend the plugin
 *   Votes log with users icons
 *   Allow to filter a query to sort posts by votes, see FAQ.
+*   Templates functions to use in your themes (see the file **bbpvotes-template.php**); eg. *bbpvotes_get_author_score()* to get an author's score (karma)
 
 = Demo =
 See it in action [here](http://www.pencil2d.org/?post_type=forum).
@@ -74,11 +75,16 @@ If you need more complex customization, you can filter the links using those hoo
 *   bbpvotes_get_vote_down_link
 *   bbpvotes_get_vote_score_link
 
+
 == Screenshots ==
 
 1. A single reply with score, vote up and vote down links (top) and vote log (after reply content)
 
 == Changelog ==
+
+= 1.0.8 =
+* Removed the function 'author_link_karma' hooked on the filter 'bbp_get_reply_author_link' as it shows up everywhere.  
+It's easier to edit the bbPress templates and to call bbpvotes_get_author_score().
 
 = 1.0.7 =
 * New template functions to get votes count by user : bbpvotes_get_votes_down_by_user_count(), bbpvotes_get_votes_up_by_user_count(), bbpvotes_get_votes_total_by_user_count()
