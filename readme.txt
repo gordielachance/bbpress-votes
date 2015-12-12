@@ -3,7 +3,7 @@ Contributors:grosbouff
 Donate link:http://bit.ly/gbreant
 Tags: bbPress, vote, votes, rate, rating, ratings, BuddyPress
 Requires at least: 4.1.1
-Tested up to: 4.3.1
+Tested up to: 4.4
 Stable tag: trunk
 License: GPLv2 or later
 
@@ -82,6 +82,9 @@ If you need more complex customization, you can filter the links using those hoo
 
 == Changelog ==
 
+= 1.0.9 =
+* SCSS files
+* CSS bug fix (https://wordpress.org/support/topic/avatars-not-in-a-row)
 = 1.0.8 =
 * Removed the function 'author_link_karma' hooked on the filter 'bbp_get_reply_author_link' as it shows up everywhere.  
 It's easier to edit the bbPress templates and to call bbpvotes_get_author_score().
