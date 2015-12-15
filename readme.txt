@@ -81,7 +81,10 @@ If you need more complex customization, you can filter the links using those hoo
 1. A single reply with score, vote up and vote down links (top) and vote log (after reply content)
 
 == Changelog ==
-
+= 1.1.0 =
+* Added option to hide voters identity in the vote log
+* Added option to disable downvoting
+* Added options page (under Settings > Forums)
 = 1.0.9 =
 * SCSS files
 * CSS bug fix (https://wordpress.org/support/topic/avatars-not-in-a-row)

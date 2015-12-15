@@ -4,7 +4,7 @@ Plugin Name: bbPress Votes
 Plugin URI: http://wordpress.org/extend/plugins/bbpress-pencil-unread
 Description: Allow users to vote up or down to topics and replies inside bbPress, just like you can on StackOverflow for example.
 Author: G.Breant
-Version: 1.0.9
+Version: 1.1.0
 Author URI: http://sandbox.pencil2d.org/
 License: GPL2+
 Text Domain: bbpvotes
@@ -17,12 +17,12 @@ class bbP_Votes {
         /**
 	 * @public string plugin version
 	 */
-	public $version = '1.0.9';
+	public $version = '1.1.0';
         
 	/**
 	 * @public string plugin DB version
 	 */
-	public $db_version = '101';
+	public $db_version = '102';
 	
 	/** Paths *****************************************************************/
 	
@@ -44,7 +44,6 @@ class bbP_Votes {
         public $metaname_post_vote_count = 'bbpvotes_vote_count';
         public $metaname_post_vote_up = 'bbpvotes_vote_up';
         public $metaname_post_vote_down = 'bbpvotes_vote_down';
-        public $metaname_options = 'bbpvotes_options';
         
         public $var_sort_by_vote = 'vote_sort';
         
@@ -86,13 +85,23 @@ class bbP_Votes {
                 
                 //options
                 $this->options_default = array(
+                    'vote_down_enabled' => true,
+                    'anonymous_vote'    => false,     //hides voters identity from the vote log
                     'vote_up_cap'       => 'read',  //capability required to vote up
                     'vote_down_cap'     => 'read',  //capability required to vote down
                     'embed_links'       => true,    //embed score, vote up, vote down links above replies
                     'embed_votes_log'   => true,    //embed vote log after replies content
 
                 );
-                $options = get_option( $this->metaname_options, $this->options_default );
+                
+                $options = array();
+                //get db value
+                //(stored in this shitty way as we are forced to by the bbPress settings API)
+                foreach ($this->options_default as $slug => $value){
+                    $db_key = '_bbpvotes_'.$slug;
+                    $options[$slug] = get_option( $db_key, $value );
+                }
+
                 $this->options = apply_filters('bbpvotes_options',$options);
 
 	}
@@ -238,6 +247,7 @@ class bbP_Votes {
             printf( '<div class="bbpvotes-author-reputation" alt="%1$s">%2$s</div>', __('Reputation:','bbpvotes'), sprintf(__('%s pts','bbpvotes'),'<span class="bbpvotes-score">'.$score.'</span>') );
         }
         function display_topic_score(){
+            if (!$votes = bbpvotes_get_votes_for_post( bbp_get_topic_id() )) return;
             $score = bbpvotes_get_votes_score_for_post( bbp_get_topic_id() );
             printf( '<span class="bbpvotes-topic-score">%1$s</span>', sprintf(__('Score: %s pts','bbpvotes'),'<span class="bbpvotes-score">'.$score.'</span>') );
         }

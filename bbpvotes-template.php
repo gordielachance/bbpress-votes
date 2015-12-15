@@ -51,6 +51,7 @@ function bbpvotes_can_user_vote_up_for_post($post_id = null){
 function bbpvotes_can_user_vote_down_for_post($post_id = null){
     if (!$post_id) return false;
     if (!$user_id = get_current_user_id()) return false;
+    if (!bbpvotes()->options['vote_down_enabled']) return false;
     $can = current_user_can( bbpvotes()->options['vote_down_cap'], $post_id );
     return apply_filters('bbpvotes_can_user_vote_up_for_post',$can,$post_id);
 }
@@ -293,30 +294,54 @@ function bbpvotes_get_post_votes_log( $post_id = 0 ) {
         if (!$votes = bbpvotes_get_votes_for_post( $post_id )) return;
 
         $r = "\n\n" . '<div id="bbpvotes-post-votes-log-' . esc_attr( $post_id ) . '" class="bbpvotes-post-votes-log">' . "\n\n";
+        
+        if (!bbpvotes()->options['anonymous_vote']){
+            foreach ( $votes as $user_id => $score ) {
 
-        foreach ( $votes as $user_id => $score ) {
-            
-            $user_id = bbp_get_user_id( $user_id );
-            if (!$user = get_userdata( $user_id )) continue;
+                $user_id = bbp_get_user_id( $user_id );
+                if (!$user = get_userdata( $user_id )) continue;
 
-            if ($score>0){
-                $title = sprintf( esc_html__( '%1$s voted up', 'bbpvotes' ), $user->display_name);
-                $icon = '<i class="bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-plus fa fa-plus-square"></i>';
-            }else{
-                $title = sprintf( esc_html__( '%1$s voted down', 'bbpvotes' ), $user->display_name);
-                $icon = '<i class="bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-minus fa fa-minus-square"></i>';
+                if ($score>0){
+                    $title = sprintf( esc_html__( '%1$s voted up', 'bbpvotes' ), $user->display_name);
+                    $icon = '<i class="bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-plus fa fa-plus-square"></i>';
+                }else{
+                    $title = sprintf( esc_html__( '%1$s voted down', 'bbpvotes' ), $user->display_name);
+                    $icon = '<i class="bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-minus fa fa-minus-square"></i>';
+                }
+
+
+                $user_avatar = get_avatar( $user_id, 30 );
+                $user_vote_link = sprintf( '<a title="%1$s" href="%2$s">%3$s</a>',
+                    $title,
+                    esc_url( bbp_get_user_profile_url( $user_id ) ),
+                    $user_avatar . $icon
+                );
+
+                $r.= apply_filters('bbpvotes_get_post_votes_log_user',$user_vote_link,$user_id,$score);
             }
+        }else{
 
-
-            $user_avatar = get_avatar( $user_id, 30 );
-            $user_vote_link = sprintf( '<a title="%1$s" href="%2$s">%3$s</a>',
-            	$title,
-            	esc_url( bbp_get_user_profile_url( $user_id ) ),
-            	$user_avatar . $icon
-            );
+            $votes_str=array();
             
-            $r.= apply_filters('bbpvotes_get_post_votes_log_user',$user_vote_link,$user_id,$score);
+            if ( $votes_up = bbpvotes_get_votes_up_for_post( $post_id ) ){
+                $votes_up_count = count($votes_up);
+                $votes_str[] = sprintf( _n( '%s vote up', '%s votes up', $votes_up_count ), '<span class="bbpvotes-score">'.$votes_up_count.'</span>' );
+            }
+            
+            if ( $votes_down = bbpvotes_get_votes_down_for_post( $post_id ) ){
+                $votes_down_count = count($votes_down);
+                $votes_str[] = sprintf( _n( '%s vote down', '%s votes down', $votes_down_count ), '<span class="bbpvotes-score">'.$votes_down_count.'</span>' );
+            }
+            
+            $votes_str = implode(' '.__('and','bbpvotes').' ',$votes_str);
+            
+            
+            $r.= sprintf(__('This reply has received %1$s.','bbpvotes'),$votes_str);
+            
         }
+
+
+
         
         $r .= "\n" . '</div>' . "\n\n";
 
