@@ -143,7 +143,7 @@ class bbP_Votes {
             
             add_action( 'bbp_theme_after_reply_author_details', array($this, 'display_reply_author_reputation'));
             add_action( 'bbp_theme_after_topic_started_by', array($this, 'display_topic_score'));
-            add_action( 'bbp_template_before_topics_loop', array($this, 'forum_display_sort_topics_link'));
+            add_action( 'bbp_template_before_topics_loop', array($this, 'topics_loop_sort_link'),9);
             
             add_action( 'bp_include', array($this, 'includes_buddypress'));     //buddypress
             
@@ -255,7 +255,7 @@ class bbP_Votes {
             printf( '<span class="bbpvotes-topic-score">%1$s</span>', sprintf(__('Score: %s pts','bbpvotes'),'<span class="bbpvotes-score">'.$score_display.'</span>') );
         }
         
-        function forum_display_sort_topics_link(){
+        function topics_loop_sort_link(){
             global $wp_query;
             $link = get_permalink();
             

@@ -3,7 +3,7 @@
 #bbpress-forums .bbpvotes-topic-score:before {
   content: ", "; }
 #bbpress-forums .bbpvotes-forum-sort-topics {
-  padding: 1em;
+  margin-bottom: 15px;
   display: block;
   text-align: right; }
 #bbpress-forums .bbp-reply-header .bbp-admin-links a.bbpvotes-post-vote-link .bbpvotes-icon {
