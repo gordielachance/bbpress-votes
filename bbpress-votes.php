@@ -349,7 +349,7 @@ class bbP_Votes {
                             update_post_meta($post->ID, $this->metaname_post_vote_count, $votes_count);
                             do_action('bbpvotes_do_post_unvote',$post->ID,$user_id);
                         }else{
-                            return new WP_Error( 'missing_capability', __( "UNABLE TO REMOVE VOTE".$caca, 'bbpvotes' ));
+                            return new WP_Error( 'unvoting_error', __( 'Error while unvoting for this post', 'bbpvotes' ));
                         }
  
 
