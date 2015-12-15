@@ -51,7 +51,9 @@ jQuery(document).ready(function($){
                         }
 
                         var voteDownLink = admin_links.find('.bbpvotes-post-votedown-link');
+                        voteDownLink.removeClass('bbpvotes-post-voted');
                         voteDownLink.text(bbpvotesL10n.vote_down);
+                        
                     }else if(link.hasClass('bbpvotes-post-votedown-link')){
                         
                         if(link.hasClass('bbpvotes-post-voted')){
@@ -63,6 +65,7 @@ jQuery(document).ready(function($){
                         }
                         
                         var voteUpLink = admin_links.find('.bbpvotes-post-voteup-link');
+                        voteUpLink.removeClass('bbpvotes-post-voted');
                         voteUpLink.text(bbpvotesL10n.vote_up);
                     }
                     
