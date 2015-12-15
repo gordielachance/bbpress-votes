@@ -50,12 +50,21 @@ function bbpvotes_can_user_vote_up_for_post($post_id = null){
     $can = current_user_can( bbpvotes()->options['vote_up_cap'], $post_id );
     return apply_filters('bbpvotes_can_user_vote_up_for_post',$can,$post_id);
 }
+
 function bbpvotes_can_user_vote_down_for_post($post_id = null){
     if (!$post_id) return false;
     if (!$user_id = get_current_user_id()) return false;
     if (!bbpvotes()->options['vote_down_enabled']) return false;
     $can = current_user_can( bbpvotes()->options['vote_down_cap'], $post_id );
     return apply_filters('bbpvotes_can_user_vote_down_for_post',$can,$post_id);
+}
+
+function bbpvotes_can_user_unvote_for_post($post_id = null){
+    if (!$post_id) return false;
+    if (!$user_id = get_current_user_id()) return false;
+    if (!bbpvotes()->options['unvote_enabled']) return false;
+    $can = current_user_can( bbpvotes()->options['unvote_cap'], $post_id );
+    return apply_filters('bbpvotes_can_user_unvote_for_post',$can,$post_id);
 }
 
 
@@ -81,8 +90,8 @@ function bbpvotes_get_vote_up_link( $args = '' ) {
         $link_classes = array(
             'bbpvotes-post-vote-link',
             'bbpvotes-post-voteup-link'
-        
         );
+
         
         switch($post_type){
             case bbp_get_topic_post_type():
@@ -97,6 +106,11 @@ function bbpvotes_get_vote_up_link( $args = '' ) {
         if ($voted_up = bbpvotes_has_user_voted_up_for_post( $post->ID )){
             $r['text'] = esc_html__( 'You voted up',   'bbpvotes' );
             $r['title'] = esc_html__( 'You have voted up for this post',   'bbpvotes' );
+            
+            if ( bbpvotes_can_user_unvote_for_post($post->ID) ){
+                $r['title'] .= ' - '.esc_html__( 'Click to remove your vote',   'bbpvotes' );
+            }
+            
             $link_classes[] = 'bbpvotes-post-voted';
         }
 
@@ -106,8 +120,6 @@ function bbpvotes_get_vote_up_link( $args = '' ) {
 
         return apply_filters( 'bbpvotes_get_vote_up_link', $retval, $r );
 }
-
-
 
 function bbpvotes_get_vote_down_link( $args = '' ) {
 
@@ -131,7 +143,6 @@ function bbpvotes_get_vote_down_link( $args = '' ) {
         $link_classes = array(
             'bbpvotes-post-vote-link',
             'bbpvotes-post-votedown-link'
-        
         );
         
         switch($post_type){
@@ -147,6 +158,9 @@ function bbpvotes_get_vote_down_link( $args = '' ) {
         if ($voted_down = bbpvotes_has_user_voted_down_for_post( $post->ID )){
             $r['text'] = esc_html__( 'You voted down',   'bbpvotes' );
             $r['title'] = esc_html__( 'You have voted down for this post',   'bbpvotes' );
+            if ( bbpvotes_can_user_unvote_for_post($post->ID) ){
+                $r['title'] .= ' - '.esc_html__( 'Click to remove your vote',   'bbpvotes' );
+            }
             $link_classes[] = 'bbpvotes-post-voted';
         }
 
@@ -155,6 +169,47 @@ function bbpvotes_get_vote_down_link( $args = '' ) {
         $retval  = $r['link_before'] . '<a href="' . esc_url( $uri ) . '"  title="' . $r['title'] . '"'.bbpvotes_classes_attr($link_classes).'>' . bbpvotes_get_link_icons() . $r['text'] . '</a>' . $r['link_after'];
 
         return apply_filters( 'bbpvotes_get_vote_down_link', $retval, $r );
+}
+
+function bbpvotes_get_unvote_link( $args = '' ) {
+
+        // Parse arguments against default values
+        $r = bbp_parse_args( $args, array(
+                'id'           => 0,
+                'link_before'  => '',
+                'link_after'   => '',
+                'sep'          => ' | ',
+                'text'    => esc_html__( 'Unvote',   'bbpvotes' ),
+        ), 'get_post_unvote_link' );
+
+        if (!$post = get_post( (int) $r['id'] )) return false;
+        
+        //capability check
+        if (!bbpvotes_can_user_unvote_for_post($post->ID)) return false;
+        
+        if ( $post->post_author == get_current_user_id() ) return false;    //user cannot vote for himself
+        
+        $post_type = $post->post_type;
+        $link_classes = array(
+            'bbpvotes-post-vote-link',
+            'bbpvotes-post-unvote-link'
+        
+        );
+        
+        $r['title'] = __('Remove my vote','bbpvotes');
+        
+        //check if user has already voted
+        if ($voted_down = bbpvotes_has_user_voted_down_for_post( $post->ID )){
+            $r['text'] = esc_html__( 'Vote removed',   'bbpvotes' );
+            $r['title'] = esc_html__( 'Your vote for this post has been removed',   'bbpvotes' );
+            $link_classes[] = 'bbpvotes-post-unvoted';
+        }
+
+        $uri     = add_query_arg( array( 'action' => 'bbpvotes_post_unvote', 'post_id' => $post->ID ) );
+        $uri     = wp_nonce_url( $uri, 'unvote-post_' . $post->ID );
+        $retval  = $r['link_before'] . '<a href="' . esc_url( $uri ) . '"  title="' . $r['title'] . '"'.bbpvotes_classes_attr($link_classes).'>' . bbpvotes_get_link_icons() . $r['text'] . '</a>' . $r['link_after'];
+
+        return apply_filters( 'bbpvotes_get_unvote_link', $retval, $r );
 }
 
 /**

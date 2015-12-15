@@ -87,6 +87,12 @@ class bbP_Votes_Admin {
                 'sanitize_callback' => 'intval',
                 'args'              => array()
             ),
+            '_bbpvotes_unvote_enabled' => array(
+                'title'             => __( 'Enable unvoting', 'bbpvotes' ),
+                'callback'          => array(&$this,'setting_enable_unvoting'),
+                'sanitize_callback' => 'intval',
+                'args'              => array()
+            ),
             '_bbpvotes_anonymous_vote' => array(
                 'title'             => __( 'Anonymous voting', 'bbptl' ),
                 'callback'          => array(&$this,'setting_anonymous_vote'),
@@ -116,6 +122,18 @@ class bbP_Votes_Admin {
             '_bbpvotes_vote_down_enabled',
             $checked,
             __( 'Allow users to vote down', 'bbpvotes' )
+        );
+    }
+    
+    function setting_enable_unvoting(){
+        $option = bbpvotes()->options['unvote_enabled'];
+        $checked = checked( (bool)$option, true, false );
+
+        printf(
+            '<input type="checkbox" name="%1$s" value="1" %2$s/> <label for="%1$s">%3$s</label>',
+            '_bbpvotes_unvote_enabled',
+            $checked,
+            __( 'Allow users to cancel their vote', 'bbpvotes' )
         );
     }
     

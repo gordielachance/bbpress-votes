@@ -86,9 +86,11 @@ class bbP_Votes {
                 //options
                 $this->options_default = array(
                     'vote_down_enabled' => true,
+                    'unvote_enabled'    => true,
                     'anonymous_vote'    => false,     //hides voters identity from the vote log
                     'vote_up_cap'       => 'read',  //capability required to vote up
                     'vote_down_cap'     => 'read',  //capability required to vote down
+                    'unvote_cap'        => 'read',  
                     'embed_links'       => true,    //embed score, vote up, vote down links above replies
                     'embed_votes_log'   => true,    //embed vote log after replies content
 
@@ -271,7 +273,7 @@ class bbP_Votes {
 
             printf('<a href="%1$s" class="bbpvotes-forum-sort-topics">%2$s</a>',$link,$text);
         }
-        
+
         /**
          * 
          * @param type $post_id
@@ -305,14 +307,11 @@ class bbP_Votes {
             $votes_count = bbpvotes_get_votes_count_for_post( $post->ID );
             $user_voted_up = bbpvotes_has_user_voted_up_for_post($post->ID,$user_id);
             $user_voted_down = bbpvotes_has_user_voted_down_for_post($post->ID,$user_id);
+            $toggle_vote = ( ($voteplus && $user_voted_down) || ($voteminus && $user_voted_up) );
+            $unvote = (bbpvotes()->options['unvote_enabled'] && ( ($voteplus && $user_voted_up) || ($voteminus && $user_voted_down) ) );
             
-            //already voted the same way
-            if ( ($voteplus && $user_voted_up) || ($voteminus && $user_voted_down) ){
-                return new WP_Error( 'already_voted', __( 'You have already voted for this post', 'bbpvotes' ));
-            }
-            
-            //toggle vote so remove old vote
-            if ( ($voteplus && $user_voted_down) || ($voteminus && $user_voted_up) ){
+            //remove old vote first if any
+            if ( $toggle_vote || $unvote ){
                 
                 //get previous vote meta key
                 if ($user_voted_down){
@@ -321,8 +320,10 @@ class bbP_Votes {
                     $meta_previous_vote = $this->metaname_post_vote_up;
                 }
 
-                if ( delete_post_meta($post->ID, $meta_previous_vote, $user_id) ){ //successfully deleted
+                if ( $removed_previous_vote = delete_post_meta($post->ID, $meta_previous_vote, $user_id) ){ //successfully deleted
                     
+                    $votes_count--;
+
                     //restore score
                     if ($user_voted_down){
                         $post_score++;
@@ -333,33 +334,60 @@ class bbP_Votes {
                 }
             }
             
-            //get new vote meta key
-            if ( $voteplus ){
-                $meta_vote = $this->metaname_post_vote_up;
-            }else{
-                $meta_vote = $this->metaname_post_vote_down;
-            }
+            if ( ($voteplus && $user_voted_up) || ($voteminus && $user_voted_down) ){ //vote duplicate : remove or block it
 
-            if ( $result = add_post_meta($post->ID, $meta_vote, $user_id) ){
-                
-                $votes_count++;
-                
-                //update score
-                if ($voteplus){
-                    $post_score++;
+                if (bbpvotes()->options['unvote_enabled']){ //remove vote
+                    
+                    if ( !bbpvotes_can_user_unvote_for_post($post->ID) ){
+                        
+                        return new WP_Error( 'missing_capability', __( "You don't have the required capability to unvote", 'bbpvotes' ));
+                        
+                    }else{
+                        
+                        if ($removed_previous_vote){
+                            update_post_meta($post->ID, $this->metaname_post_vote_score, $post_score);
+                            update_post_meta($post->ID, $this->metaname_post_vote_count, $votes_count);
+                            do_action('bbpvotes_do_post_unvote',$post->ID,$user_id);
+                        }else{
+                            return new WP_Error( 'missing_capability', __( "UNABLE TO REMOVE VOTE".$caca, 'bbpvotes' ));
+                        }
+ 
+
+                    }
+                }else{ //block vote
+                    return new WP_Error( 'already_voted', __( 'You have already voted for this post', 'bbpvotes' ));
+                }
+
+            }else{ //process vote
+                //get new vote meta key
+                if ( $voteplus ){
+                    $meta_vote = $this->metaname_post_vote_up;
                 }else{
-                    $post_score--;
+                    $meta_vote = $this->metaname_post_vote_down;
+                }
+
+                if ( $result = add_post_meta($post->ID, $meta_vote, $user_id) ){
+
+                    $votes_count++;
+
+                    //update score
+                    if ($voteplus){
+                        $post_score++;
+                    }else{
+                        $post_score--;
+                    }
+
+                    update_post_meta($post->ID, $this->metaname_post_vote_score, $post_score);
+                    update_post_meta($post->ID, $this->metaname_post_vote_count, $votes_count);
+
+                }else{
+                    return new WP_Error( 'voting_error', __( 'Error while voting for this post', 'bbpvotes' ));
                 }
                 
-                update_post_meta($post->ID, $this->metaname_post_vote_score, $post_score);
-                update_post_meta($post->ID, $this->metaname_post_vote_count, $votes_count);
+                do_action('bbpvotes_do_post_vote',$post->ID,$user_id,$vote);
                 
-            }else{
-                return new WP_Error( 'voting_error', __( 'Error while voting for this post', 'bbpvotes' ));
             }
-            
-            do_action('bbpvotes_do_post_vote',$post->ID,$user_id,$vote);
-            
+
             return true;
         }
         

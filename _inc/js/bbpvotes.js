@@ -29,22 +29,39 @@ jQuery(document).ready(function($){
                 link.addClass('bbpvotes-db-loading');
             },
             success: function(data){
-                if (data.success == false) {
+
+                if (data.success === false) {
                     link.addClass('bbpvotes-db-error');
                     console.log(data.message);
-                }else if (data.success == true) {
+                }else if (data.success === true) {
                     link.addClass('bbpvotes-db-success');
                     
                     var scoreLink = admin_links.find('.bbpvotes-post-score-link');
                     if (data.score_text) scoreLink.text(data.score_text);
                     if (data.score_title) scoreLink.attr('title',data.score_title);
-                    
+
                     if(link.hasClass('bbpvotes-post-voteup-link')){
-                        link.text(bbpvotesL10n.you_voted_up);
+
+                        if(link.hasClass('bbpvotes-post-voted')){
+                            link.text(bbpvotesL10n.vote_up);
+                            link.removeClass('bbpvotes-post-voted');
+                        }else{
+                            link.text(bbpvotesL10n.you_voted_up);
+                            link.addClass('bbpvotes-post-voted');
+                        }
+
                         var voteDownLink = admin_links.find('.bbpvotes-post-votedown-link');
                         voteDownLink.text(bbpvotesL10n.vote_down);
                     }else if(link.hasClass('bbpvotes-post-votedown-link')){
-                        link.text(bbpvotesL10n.you_voted_down);
+                        
+                        if(link.hasClass('bbpvotes-post-voted')){
+                            link.text(bbpvotesL10n.vote_down);
+                            link.removeClass('bbpvotes-post-voted');
+                        }else{
+                            link.text(bbpvotesL10n.you_voted_down);
+                            link.addClass('bbpvotes-post-voted');
+                        }
+                        
                         var voteUpLink = admin_links.find('.bbpvotes-post-voteup-link');
                         voteUpLink.text(bbpvotesL10n.vote_up);
                     }
