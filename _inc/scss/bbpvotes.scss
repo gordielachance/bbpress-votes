@@ -1,42 +1,56 @@
 @import "compass/css3";
 
 #bbpress-forums{
-    .bbp-admin-links{
-        a.bbpvotes-post-vote-link {
-          .bbpvotes-icon {
-            display: none;
-          }
-          &.bbpvotes-db-loading .bbpvotes-icon-loading, &.bbpvotes-db-success .bbpvotes-icon-success, &.bbpvotes-db-error .bbpvotes-icon-error {
-            display: inherit;
-          }
+    
+    .bbpvotes-score{
+        font-weight:bold;
+    }
+    .bbpvotes-topic-score{
+        &:before{
+            content:", ";
         }
     }
-    .bbpvotes-post-votes-log {
-      border-top: 1px dotted #ddd;
-      width: 100%;
-      margin: 0;
-      padding: 8px 0 0 0;
-      font-size: 11px;
-      color: #aaa;
-      a {
-        position: relative;
-        display: inline-block !important;
-        margin: 2.5px !important;
-        width: 30px;
-        height: 30px;
-        img {
-          display: inline !important;
-          vertical-align:top;
-          @include box-shadow(none);
+    .bbp-reply-header{
+        .bbp-admin-links{
+            a.bbpvotes-post-vote-link {
+              .bbpvotes-icon {
+                display: none;
+              }
+              &.bbpvotes-db-loading .bbpvotes-icon-loading, &.bbpvotes-db-success .bbpvotes-icon-success, &.bbpvotes-db-error .bbpvotes-icon-error {
+                display: inherit;
+              }
+            }
         }
-        .bbpvotes-avatar-icon-vote {
-          position: absolute;
-          bottom: -2.5px;
-          right: -2.5px;
-          font-size: 1em;
-          width: 1em;
-          height: 1em;
-        }
-      }
     }
+    .bbp-reply-content{
+        .bbpvotes-post-votes-log {
+            border-top: 1px dotted #ddd;
+            width: 100%;
+            margin: 0;
+            padding: 8px 0 0 0;
+            font-size: 11px;
+            color: #aaa;
+            a {
+              position: relative;
+              display: inline-block !important;
+              margin: 2.5px !important;
+              width: 30px;
+              height: 30px;
+              img {
+                display: inline !important;
+                vertical-align:top;
+                @include box-shadow(none);
+              }
+              .bbpvotes-avatar-icon-vote {
+                position: absolute;
+                bottom: -2.5px;
+                right: -2.5px;
+                font-size: 1em;
+                width: 1em;
+                height: 1em;
+              }
+            }
+        }
+    }
+
 }

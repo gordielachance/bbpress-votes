@@ -132,6 +132,9 @@ class bbP_Votes {
             add_filter( 'bbp_get_reply_content', array($this, 'post_content_append_votes_log'),  98,  2 );
             add_filter( 'bbp_get_topic_content', array($this, 'post_content_append_votes_log'),  98,  2 );
             
+            add_action( 'bbp_theme_after_reply_author_details', array($this, 'display_reply_author_reputation'));
+            add_action( 'bbp_theme_after_topic_started_by', array($this, 'display_topic_score'));
+            
             add_action( 'bp_include', array($this, 'includes_buddypress'));     //buddypress
             
             add_action( 'pre_get_posts', array($this, 'sort_by_votes'));
@@ -228,6 +231,15 @@ class bbP_Votes {
             $vote_links = array_filter($vote_links);
             
             return array_merge($vote_links,$links);
+        }
+
+        function display_reply_author_reputation(){
+            $score = bbpvotes_get_author_score( bbp_get_reply_author_id() );
+            printf( '<div class="bbpvotes-author-reputation" alt="%1$s">%2$s</div>', __('Reputation:','bbpvotes'), sprintf(__('%s pts','bbpvotes'),'<span class="bbpvotes-score">'.$score.'</span>') );
+        }
+        function display_topic_score(){
+            $score = bbpvotes_get_votes_score_for_post( bbp_get_topic_id() );
+            printf( '<span class="bbpvotes-topic-score">%1$s</span>', sprintf(__('Score: %s pts','bbpvotes'),'<span class="bbpvotes-score">'.$score.'</span>') );
         }
         
         /**

@@ -1,33 +1,31 @@
-/* line 6, ../scss/bbpvotes.scss */
-#bbpress-forums .bbp-admin-links a.bbpvotes-post-vote-link .bbpvotes-icon {
+#bbpress-forums .bbpvotes-score {
+  font-weight: bold; }
+#bbpress-forums .bbpvotes-topic-score:before {
+  content: ", "; }
+#bbpress-forums .bbp-reply-header .bbp-admin-links a.bbpvotes-post-vote-link .bbpvotes-icon {
   display: none; }
-/* line 9, ../scss/bbpvotes.scss */
-#bbpress-forums .bbp-admin-links a.bbpvotes-post-vote-link.bbpvotes-db-loading .bbpvotes-icon-loading, #bbpress-forums .bbp-admin-links a.bbpvotes-post-vote-link.bbpvotes-db-success .bbpvotes-icon-success, #bbpress-forums .bbp-admin-links a.bbpvotes-post-vote-link.bbpvotes-db-error .bbpvotes-icon-error {
+#bbpress-forums .bbp-reply-header .bbp-admin-links a.bbpvotes-post-vote-link.bbpvotes-db-loading .bbpvotes-icon-loading, #bbpress-forums .bbp-reply-header .bbp-admin-links a.bbpvotes-post-vote-link.bbpvotes-db-success .bbpvotes-icon-success, #bbpress-forums .bbp-reply-header .bbp-admin-links a.bbpvotes-post-vote-link.bbpvotes-db-error .bbpvotes-icon-error {
   display: inherit; }
-/* line 14, ../scss/bbpvotes.scss */
-#bbpress-forums .bbpvotes-post-votes-log {
+#bbpress-forums .bbp-reply-content .bbpvotes-post-votes-log {
   border-top: 1px dotted #ddd;
   width: 100%;
   margin: 0;
   padding: 8px 0 0 0;
   font-size: 11px;
   color: #aaa; }
-  /* line 21, ../scss/bbpvotes.scss */
-  #bbpress-forums .bbpvotes-post-votes-log a {
+  #bbpress-forums .bbp-reply-content .bbpvotes-post-votes-log a {
     position: relative;
     display: inline-block !important;
     margin: 2.5px !important;
     width: 30px;
     height: 30px; }
-    /* line 27, ../scss/bbpvotes.scss */
-    #bbpress-forums .bbpvotes-post-votes-log a img {
+    #bbpress-forums .bbp-reply-content .bbpvotes-post-votes-log a img {
       display: inline !important;
       vertical-align: top;
       -moz-box-shadow: none;
       -webkit-box-shadow: none;
       box-shadow: none; }
-    /* line 32, ../scss/bbpvotes.scss */
-    #bbpress-forums .bbpvotes-post-votes-log a .bbpvotes-avatar-icon-vote {
+    #bbpress-forums .bbp-reply-content .bbpvotes-post-votes-log a .bbpvotes-avatar-icon-vote {
       position: absolute;
       bottom: -2.5px;
       right: -2.5px;
