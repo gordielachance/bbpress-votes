@@ -14,10 +14,12 @@ function bbpvotes_get_score_link( $args = '' ) {
         $post = get_post( (int) $r['id'] );
         $post_type = $post->post_type;
         $score = bbpvotes_get_votes_score_for_post($post->ID);
+        $score_display = bbpvotes_number_format($score);
         $votes_count = bbpvotes_get_votes_count_for_post($post->ID);
+        $votes_count_display = bbpvotes_number_format($score);
 
-        $r['text'] = sprintf(__('Score: %1$d','bbpvotes'),$score);
-        $r['title'] = sprintf(__('Votes count: %1$d','bbpvotes'),$votes_count);
+        $r['text'] = sprintf(__('Score: %1$s','bbpvotes'),$score_display);
+        $r['title'] = sprintf(__('Votes count: %1$s','bbpvotes'),$votes_count_display);
         
         $link_classes = array(
             'bbpvotes-post-vote-link',
@@ -325,12 +327,14 @@ function bbpvotes_get_post_votes_log( $post_id = 0 ) {
             
             if ( $votes_up = bbpvotes_get_votes_up_for_post( $post_id ) ){
                 $votes_up_count = count($votes_up);
-                $votes_str[] = sprintf( _n( '%s vote up', '%s votes up', $votes_up_count ), '<span class="bbpvotes-score">'.$votes_up_count.'</span>' );
+                $votes_up_count_display = bbpvotes_number_format($votes_up_count);
+                $votes_str[] = sprintf( _n( '%s vote up', '%s votes up', $votes_up_count ), '<span class="bbpvotes-score">'.$votes_up_count_display.'</span>' );
             }
             
             if ( $votes_down = bbpvotes_get_votes_down_for_post( $post_id ) ){
                 $votes_down_count = count($votes_down);
-                $votes_str[] = sprintf( _n( '%s vote down', '%s votes down', $votes_down_count ), '<span class="bbpvotes-score">'.$votes_down_count.'</span>' );
+                $votes_down_count_display = bbpvotes_number_format($votes_down_count);
+                $votes_str[] = sprintf( _n( '%s vote down', '%s votes down', $votes_down_count ), '<span class="bbpvotes-score">'.$votes_down_count_display.'</span>' );
             }
             
             $votes_str = implode(' '.__('and','bbpvotes').' ',$votes_str);

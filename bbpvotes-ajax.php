@@ -28,9 +28,11 @@ function bbpvotes_post_vote_ajax(){
     if ( !is_wp_error( $vote ) ) {
         $result['success'] = true;
         $score = bbpvotes_get_votes_score_for_post($post_id);
+        $score_display = bbpvotes_number_format($score);
         $votes_count = bbpvotes_get_votes_count_for_post($post_id);
-        $result['score_text'] = sprintf(__('Score: %1$d','bbpvotes'),$score);
-        $result['score_title'] = sprintf(__('Votes count: %1$d','bbpvotes'),$votes_count);
+        $vote_count_display = bbpvotes_number_format($votes_count);
+        $result['score_text'] = sprintf(__('Score: %1$s','bbpvotes'),$score_display);
+        $result['score_title'] = sprintf(__('Votes count: %1$s','bbpvotes'),$vote_count_display);
     }else{
         $result['message'] = $vote->get_error_message();
     }

@@ -85,6 +85,8 @@ If you need more complex customization, you can filter the links using those hoo
 * Added option to hide voters identity in the vote log
 * Added option to disable downvoting
 * Added options page (under Settings > Forums)
+* Display the score of an topic next to its author when showing a topics list
+* Display the "reputation" score of an author next to its name when displaying a reply
 = 1.0.9 =
 * SCSS files
 * CSS bug fix (https://wordpress.org/support/topic/avatars-not-in-a-row)

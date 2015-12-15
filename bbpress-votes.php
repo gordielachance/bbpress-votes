@@ -143,6 +143,7 @@ class bbP_Votes {
             
             add_action( 'bbp_theme_after_reply_author_details', array($this, 'display_reply_author_reputation'));
             add_action( 'bbp_theme_after_topic_started_by', array($this, 'display_topic_score'));
+            add_action( 'bbp_template_before_topics_loop', array($this, 'forum_display_sort_topics_link'));
             
             add_action( 'bp_include', array($this, 'includes_buddypress'));     //buddypress
             
@@ -244,12 +245,31 @@ class bbP_Votes {
 
         function display_reply_author_reputation(){
             $score = bbpvotes_get_author_score( bbp_get_reply_author_id() );
-            printf( '<div class="bbpvotes-author-reputation" alt="%1$s">%2$s</div>', __('Reputation:','bbpvotes'), sprintf(__('%s pts','bbpvotes'),'<span class="bbpvotes-score">'.$score.'</span>') );
+            $score_display = bbpvotes_number_format($score);
+            printf( '<div class="bbpvotes-author-reputation" alt="%1$s">%2$s</div>', __('Reputation:','bbpvotes'), sprintf(__('%s pts','bbpvotes'),'<span class="bbpvotes-score">'.$score_display.'</span>') );
         }
         function display_topic_score(){
             if (!$votes = bbpvotes_get_votes_for_post( bbp_get_topic_id() )) return;
             $score = bbpvotes_get_votes_score_for_post( bbp_get_topic_id() );
-            printf( '<span class="bbpvotes-topic-score">%1$s</span>', sprintf(__('Score: %s pts','bbpvotes'),'<span class="bbpvotes-score">'.$score.'</span>') );
+            $score_display = bbpvotes_number_format($score);
+            printf( '<span class="bbpvotes-topic-score">%1$s</span>', sprintf(__('Score: %s pts','bbpvotes'),'<span class="bbpvotes-score">'.$score_display.'</span>') );
+        }
+        
+        function forum_display_sort_topics_link(){
+            global $wp_query;
+            $link = get_permalink();
+            
+            $query_var = $wp_query->get( $this->var_sort_by_vote );
+
+            
+            if (!$query_var){
+                $link = add_query_arg(array($this->var_sort_by_vote => 'score_desc'),$link);
+                $text = __('Sort topics by votes','bbpvotes');
+            }else{
+                $text = __('Sort topics by date','bbpvotes');
+            }
+
+            printf('<a href="%1$s" class="bbpvotes-forum-sort-topics">%2$s</a>',$link,$text);
         }
         
         /**
@@ -344,8 +364,13 @@ class bbP_Votes {
         }
         
         function sort_by_votes( $query ){
+            global $wp_query;
             
-            if ( ( !$order = $query->get( $this->var_sort_by_vote ) ) || !in_array($query->get('post_type'),$this->supported_post_types) ) return $query;
+            //TO FIX TO CHECK
+            //$query_var = $query->get( $this->var_sort_by_vote ); //should be this ?
+            $query_var = $wp_query->get( $this->var_sort_by_vote );
+
+            if ( ( !$order = $query_var ) || !in_array($query->get('post_type'),$this->supported_post_types) ) return $query;
 
             switch ($order){
                 

@@ -49,4 +49,38 @@ function bbpvotes_rebuild_scores(){
 
 }
 
+/**
+ * Round Numbers To K (Thousand), M (Million) or B (Billion)
+ * @param type $number
+ * @param type $min_value
+ * @param type $decimal
+ * @return type
+ */
+function bbpvotes_number_format( $number, $min_value = 1000, $decimal = 1 ) {
+    
+    $number = (int)$number;
+
+    if( $number < $min_value ) {
+        $output = number_format_i18n( $number );
+    }else{
+
+        $alphabets = array(
+            1000000000 => _x( 'B', 'billion unit', 'bbpvotes' ), 
+            1000000 => _x( 'M', 'million unit', 'bbpvotes' ), 
+            1000 => _x( 'K', 'thousand unit', 'bbpvotes' ), 
+        );
+
+        foreach( $alphabets as $key => $value ){
+            if( $number >= $key ) {
+                $output = round( $number / $key, $decimal ) . '' . $value;
+                break;
+            }
+        }
+
+    }
+
+    return apply_filters('bbpvotes_number_format',$output,$score);
+}
+
+
 ?>
