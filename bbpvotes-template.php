@@ -55,7 +55,7 @@ function bbpvotes_can_user_vote_down_for_post($post_id = null){
     if (!$user_id = get_current_user_id()) return false;
     if (!bbpvotes()->options['vote_down_enabled']) return false;
     $can = current_user_can( bbpvotes()->options['vote_down_cap'], $post_id );
-    return apply_filters('bbpvotes_can_user_vote_up_for_post',$can,$post_id);
+    return apply_filters('bbpvotes_can_user_vote_down_for_post',$can,$post_id);
 }
 
 
