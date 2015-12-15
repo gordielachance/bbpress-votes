@@ -82,6 +82,7 @@ If you need more complex customization, you can filter the links using those hoo
 
 == Changelog ==
 = 1.1.0 =
+* supports unvoting (by reclicking the link)
 * "sort by votes" link before topics loop
 * Added option to hide voters identity in the vote log
 * Added option to disable downvoting
