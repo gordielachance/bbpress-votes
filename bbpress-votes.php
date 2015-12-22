@@ -88,6 +88,7 @@ class bbP_Votes {
                     'vote_down_enabled' => true,
                     'unvote_enabled'    => true,
                     'anonymous_vote'    => false,     //hides voters identity from the vote log
+                    'points_abbreviation' => 'pts',     //changes the default 'pts' abbreviation
                     'vote_up_cap'       => 'read',  //capability required to vote up
                     'vote_down_cap'     => 'read',  //capability required to vote down
                     'unvote_cap'        => 'read',  
@@ -248,13 +249,13 @@ class bbP_Votes {
         function display_reply_author_reputation(){
             $score = bbpvotes_get_author_score( bbp_get_reply_author_id() );
             $score_display = bbpvotes_number_format($score);
-            printf( '<div class="bbpvotes-author-reputation" alt="%1$s">%2$s</div>', __('Reputation:','bbpvotes'), sprintf(__('%s pts','bbpvotes'),'<span class="bbpvotes-score">'.$score_display.'</span>') );
+            printf( '<div class="bbpvotes-author-reputation" alt="%1$s">%2$s</div>', __('Reputation:','bbpvotes'), sprintf(__('%s ' . $this->options['points_abbreviation'],'bbpvotes'),'<span class="bbpvotes-score">'.$score_display.'</span>') );
         }
         function display_topic_score(){
             if (!$votes = bbpvotes_get_votes_for_post( bbp_get_topic_id() )) return;
             $score = bbpvotes_get_votes_score_for_post( bbp_get_topic_id() );
             $score_display = bbpvotes_number_format($score);
-            printf( '<span class="bbpvotes-topic-score">%1$s</span>', sprintf(__('Score: %s pts','bbpvotes'),'<span class="bbpvotes-score">'.$score_display.'</span>') );
+            printf( '<span class="bbpvotes-topic-score">%1$s</span>', sprintf(__('Score: %s ' . $this->options['points_abbreviation'],'bbpvotes'),'<span class="bbpvotes-score">'.$score_display.'</span>') );
         }
         
         function topics_loop_sort_link(){
@@ -271,7 +272,8 @@ class bbP_Votes {
                 $text = __('Sort topics by date','bbpvotes');
             }
 
-            printf('<a href="%1$s" class="bbpvotes-forum-sort-topics">%2$s</a>',$link,$text);
+            $value = sprintf('<a href="%1$s" class="bbpvotes-forum-sort-topics">%2$s</a>',$link,$text);
+            echo apply_filters('topics_loop_sort_link',$value,$link,$text);
         }
 
         /**

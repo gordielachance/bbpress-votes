@@ -99,6 +99,12 @@ class bbP_Votes_Admin {
                 'sanitize_callback' => 'intval',
                 'args'              => array()
             ),
+            '_bbpvotes_points_abbreviation' => array(
+                'title'             => __( 'Points abbreviation', 'bbpvotes' ),
+                'callback'          => array(&$this,'setting_points_abbreviation'),
+                'sanitize_callback' => 'sanitize_text_field',
+                'args'              => array()
+            ),
         );
 
         return $settings;
@@ -148,7 +154,17 @@ class bbP_Votes_Admin {
             __( "Hide voters identity from the vote log", 'bbpvotes' )
         );
     }
-    
+
+    function setting_points_abbreviation(){
+        $option = bbpvotes()->options['points_abbreviation'];
+
+        printf(
+            '<input type="text" name="%1$s" value="%2$s" /> <label for="%1$s">%3$s</label>',
+            '_bbpvotes_points_abbreviation',
+            $option,
+            __( "Change the default 'pts' abbreviation", 'bbpvotes' )
+        );
+    }    
 
     function post_column_register($defaults){
         
