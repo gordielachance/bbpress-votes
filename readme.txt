@@ -3,7 +3,7 @@ Contributors:grosbouff
 Donate link:http://bit.ly/gbreant
 Tags: bbPress, vote, votes, rate, rating, ratings, BuddyPress
 Requires at least: 4.1.1
-Tested up to: 4.4
+Tested up to: 4.6.1
 Stable tag: trunk
 License: GPLv2 or later
 
@@ -131,4 +131,4 @@ It's easier to edit the bbPress templates and to call bbpvotes_get_author_score(
 
 == Localization ==
 
-You can help translate the plugin on [oneskyapp](http://osjxryl.oneskyapp.com/admin/project/dashboard/project/63465) !
+If it hasn't been done already, you can translate the plugin and send me the translation.  I recommand [Loco Translate](https://fr.wordpress.org/plugins/loco-translate/) to work on your translations within Wordpress.

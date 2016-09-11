@@ -305,16 +305,16 @@ class bbP_Votes {
             //get current votes
             $post_score = bbpvotes_get_votes_score_for_post( $post->ID );
             $votes_count = bbpvotes_get_votes_count_for_post( $post->ID );
-            $user_voted_up = bbpvotes_has_user_voted_up_for_post($post->ID,$user_id);
-            $user_voted_down = bbpvotes_has_user_voted_down_for_post($post->ID,$user_id);
-            $toggle_vote = ( ($voteplus && $user_voted_down) || ($voteminus && $user_voted_up) );
-            $unvote = (bbpvotes()->options['unvote_enabled'] && ( ($voteplus && $user_voted_up) || ($voteminus && $user_voted_down) ) );
+            $is_previous_vote_up = bbpvotes_has_user_voted_up_for_post($post->ID,$user_id);
+            $is_previous_vote_down = bbpvotes_has_user_voted_down_for_post($post->ID,$user_id);
+            $toggle_vote = ( ($voteplus && $is_previous_vote_down) || ($voteminus && $is_previous_vote_up) );
+            $unvote = ( ($voteplus && $is_previous_vote_up) || ($voteminus && $is_previous_vote_down) );
             
             //remove old vote first if any
             if ( $toggle_vote || $unvote ){
                 
                 //get previous vote meta key
-                if ($user_voted_down){
+                if ($is_previous_vote_down){
                     $meta_previous_vote = $this->metaname_post_vote_down;
                 }else{
                     $meta_previous_vote = $this->metaname_post_vote_up;
@@ -325,7 +325,7 @@ class bbP_Votes {
                     $votes_count--;
 
                     //restore score
-                    if ($user_voted_down){
+                    if ($is_previous_vote_down){
                         $post_score++;
                     }else{
                         $post_score--;
@@ -334,7 +334,7 @@ class bbP_Votes {
                 }
             }
             
-            if ( ($voteplus && $user_voted_up) || ($voteminus && $user_voted_down) ){ //vote duplicate : remove or block it
+            if ( $unvote ){ //vote duplicate : remove or block it
 
                 if (bbpvotes()->options['unvote_enabled']){ //remove vote
                     
