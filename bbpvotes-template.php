@@ -409,9 +409,8 @@ function bbpvotes_get_post_votes_log( $post_id = 0 ) {
             }
             
             $votes_str = implode(' '.__('and','bbpvotes').' ',$votes_str);
-            
-            
-            $r.= sprintf(__('This reply has received %1$s.','bbpvotes'),$votes_str);
+
+            $r.= sprintf(__('This post has received %s.','bbpvotes'),$votes_str);
             
         }
 

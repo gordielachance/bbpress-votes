@@ -46,6 +46,7 @@ class bbP_Votes_Settings {
             $new_input['vote_down_enabled'] = ( isset($input['vote_down_enabled']) ) ? 'on' : 'off';
             $new_input['unvote_enabled'] = ( isset($input['unvote_enabled']) ) ? 'on' : 'off';
             $new_input['anonymous_vote'] = ( isset($input['anonymous_vote']) ) ? 'on' : 'off';
+            $new_input['embed_votes_log'] = ( isset($input['embed_votes_log']) ) ? 'on' : 'off';
             
             //units
 
@@ -105,10 +106,25 @@ class bbP_Votes_Settings {
         
         add_settings_field(
             'enable_unvoting', 
-            __('Enable downvoting','bbpvotes'), 
+            __('Enable unvoting','bbpvotes'), 
             array( $this, 'enable_unvoting_callback' ), 
             'bbpvotes-settings-page', // Page
             'settings_general'//section
+        );
+        
+        add_settings_section(
+            'settings_log', // ID
+            __('Vote Log','bbpvotes'), // Title
+            array( $this, 'bbpvotes_settings_votelog_desc' ), // Callback
+            'bbpvotes-settings-page' // Page
+        );
+        
+        add_settings_field(
+            'embed_log', 
+            __('Embed vote log','bbpvotes'), 
+            array( $this, 'embed_log_callback' ), 
+            'bbpvotes-settings-page', // Page
+            'settings_log'//section
         );
         
         add_settings_field(
@@ -116,7 +132,7 @@ class bbP_Votes_Settings {
             __('Anonymous voting','bbpvotes'), 
             array( $this, 'anonymous_vote_callback' ), 
             'bbpvotes-settings-page', // Page
-            'settings_general'//section
+            'settings_log'//section
         );
         
         add_settings_section(
@@ -133,14 +149,6 @@ class bbP_Votes_Settings {
             'bbpvotes-settings-page', // Page
             'settings_display'//section
         );
-        
-        add_settings_section(
-            'settings_replies', // ID
-            __('Replies','bbpvotes'), // Title
-            array( $this, 'bbpvotes_settings_replies_desc' ), // Callback
-            'bbpvotes-settings-page' // Page
-        );
-
         
         add_settings_section(
             'settings_system', // ID
@@ -173,8 +181,8 @@ class bbP_Votes_Settings {
 
         foreach ((array)$allowed as $slug){
 
-            if ( !$post_type = get_post_type_object($slug) ) continue;
-            $name = $post_type->name;
+            if ( !$post_type_obj = get_post_type_object($slug) ) continue;
+            $name = $post_type_obj->name;
             $checked = checked( in_array($slug,$enabled), true, false );
             printf(
                 '<input type="checkbox" name="%1$s[post_types][%2$s]" value="on" %3$s/> %4$s ',
@@ -205,6 +213,21 @@ class bbP_Votes_Settings {
             bbpvotes()->metaname_options,
             checked( $option, 'on', false ),
             __( 'Allow users to cancel their vote', 'bbpvotes' )
+        );
+    }
+    
+    function bbpvotes_settings_votelog_desc(){
+        
+    }
+    
+    function embed_log_callback(){
+        $option = bbpvotes()->get_options('embed_votes_log');
+        
+        printf(
+            '<input type="checkbox" name="%s[embed_votes_log]" value="on" %s /> %s',
+            bbpvotes()->metaname_options,
+            checked( $option, 'on', false ),
+            __( "Display the list of voters under the post", 'bbpvotes' )
         );
     }
     
@@ -252,12 +275,6 @@ class bbP_Votes_Settings {
         
         
     }
-    
-    function bbpvotes_settings_replies_desc(){
-        
-    }
-    
-    
 
     function bbpvotes_settings_system_desc(){
         

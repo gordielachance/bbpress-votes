@@ -89,14 +89,14 @@ class bbP_Votes {
                     'ignored_post_type' => array(),
                     'vote_down_enabled' => 'on',
                     'unvote_enabled'    => 'on',
-                    'anonymous_vote'    => 'off',     //hides voters identity from the vote log
-                    'vote_up_cap'       => 'read',  //capability required to vote up
-                    'vote_down_cap'     => 'read',  //capability required to vote down
-                    'unvote_cap'        => 'read',  
                     'embed_links'       => 'on',    //embed score, vote up, vote down links above replies
-                    'embed_votes_log'   => 'on',    //embed vote log after replies content
+                    'embed_votes_log'   => 'on',    //embed vote log below replies content
+                    'anonymous_vote'    => 'off',     //hides voters identity from the vote log
                     'unit_singular'     => '%s pt',
                     'unit_plural'       => '%s pts',
+                    'vote_up_cap'       => 'read',  //capability required to vote up
+                    'vote_down_cap'     => 'read',  //capability required to vote down
+                    'unvote_cap'        => 'read'
 
                 );
         
