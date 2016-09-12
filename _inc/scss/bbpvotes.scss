@@ -5,11 +5,24 @@
     .bbpvotes-score{
         font-weight:bold;
     }
-    .bbpvotes-topic-score{
-        &:before{
-            content:", ";
+    .bbpvotes-score-wrapper{
+        label{
+            &:after { 
+                content: ": ";
+            }
+        }
+        &.bbpvotes-score-author-wrapper{
+            label{
+                display:none;
+            }
+        }
+        &.bbpvotes-score-topic-wrapper{
+            &:before{
+                content:", ";
+            }
         }
     }
+
     
     .bbpvotes-forum-sort-topics{
         margin-bottom:15px;
@@ -30,6 +43,9 @@
         }
     }
     .bbp-reply-content{
+        
+
+        
         .bbpvotes-post-votes-log {
             border-top: 1px dotted #ddd;
             width: 100%;

@@ -47,23 +47,23 @@ function bbpvotes_get_link_icons(){
 function bbpvotes_can_user_vote_up_for_post($post_id = null){
     if (!$post_id) return false;
     if (!$user_id = get_current_user_id()) return false;
-    $can = current_user_can( bbpvotes()->options['vote_up_cap'], $post_id );
+    $can = current_user_can( bbpvotes()->get_options('vote_up_cap'), $post_id );
     return apply_filters('bbpvotes_can_user_vote_up_for_post',$can,$post_id);
 }
 
 function bbpvotes_can_user_vote_down_for_post($post_id = null){
     if (!$post_id) return false;
     if (!$user_id = get_current_user_id()) return false;
-    if (!bbpvotes()->options['vote_down_enabled']) return false;
-    $can = current_user_can( bbpvotes()->options['vote_down_cap'], $post_id );
+    if (bbpvotes()->get_options('vote_down_enabled') != 'on') return false;
+    $can = current_user_can( bbpvotes()->get_options('vote_down_cap'), $post_id );
     return apply_filters('bbpvotes_can_user_vote_down_for_post',$can,$post_id);
 }
 
 function bbpvotes_can_user_unvote_for_post($post_id = null){
     if (!$post_id) return false;
     if (!$user_id = get_current_user_id()) return false;
-    if (!bbpvotes()->options['unvote_enabled']) return false;
-    $can = current_user_can( bbpvotes()->options['unvote_cap'], $post_id );
+    if (bbpvotes()->get_options('unvote_enabled') != 'on') return false;
+    $can = current_user_can( bbpvotes()->get_options('unvote_cap'), $post_id );
     return apply_filters('bbpvotes_can_user_unvote_for_post',$can,$post_id);
 }
 
@@ -352,7 +352,7 @@ function bbpvotes_get_post_votes_log( $post_id = 0 ) {
 
         $r = "\n\n" . '<div id="bbpvotes-post-votes-log-' . esc_attr( $post_id ) . '" class="bbpvotes-post-votes-log">' . "\n\n";
         
-        if (!bbpvotes()->options['anonymous_vote']){
+        if ( bbpvotes()->get_options('anonymous_vote') == 'off'){
             foreach ( $votes as $user_id => $score ) {
 
                 $user_id = bbp_get_user_id( $user_id );
@@ -549,7 +549,7 @@ function bbpvotes_get_author_score( $author_id = 0, $post_args = null ){
 
         //Get sum of scores for those posts
         
-        $votes_scores = $wpdb->get_col( $wpdb->prepare(
+        $query =  $wpdb->prepare(
                 "
                 SELECT      meta_value
                 FROM        $wpdb->postmeta
@@ -557,7 +557,12 @@ function bbpvotes_get_author_score( $author_id = 0, $post_args = null ){
                             AND post_id IN ({$post_ids_str})
                 ",
                 bbpvotes()->metaname_post_vote_score
-        ) ); 
+        );
+        
+        $votes_scores = $wpdb->get_col( $query ); 
+        
+        bbpvotes()->debug_log("bbpvotes_get_author_score for user#".$author_id);
+        bbpvotes()->debug_log($query);
 
         return array_sum($votes_scores);
 

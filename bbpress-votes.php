@@ -40,14 +40,18 @@ class bbP_Votes {
 	/**
 	 * @public meta name for post votes
 	 */
-        public $metaname_post_vote_score = 'bbpvotes_vote_score';
-        public $metaname_post_vote_count = 'bbpvotes_vote_count';
-        public $metaname_post_vote_up = 'bbpvotes_vote_up';
-        public $metaname_post_vote_down = 'bbpvotes_vote_down';
-        
-        public $var_sort_by_vote = 'vote_sort';
-        
-        public $supported_post_types;
+    public $metaname_options = 'bbpvotes_options'; // plugin's options (stored in wp_options) 
+    public $metaname_post_vote_score = 'bbpvotes_vote_score';
+    public $metaname_post_vote_count = 'bbpvotes_vote_count';
+    public $metaname_post_vote_up = 'bbpvotes_vote_up';
+    public $metaname_post_vote_down = 'bbpvotes_vote_down';
+
+    public $var_sort_by_vote = 'vote_sort';
+
+    public $supported_post_types;
+    
+    public $donate_link = 'http://bit.ly/gbreant';
+    
         
 	/**
 	 * @var The one true Instance
@@ -82,29 +86,21 @@ class bbP_Votes {
 		$this->basename   = plugin_basename( $this->file );
 		$this->plugin_dir = plugin_dir_path( $this->file );
 		$this->plugin_url = plugin_dir_url ( $this->file );
-                
-                //options
-                $this->options_default = array(
-                    'vote_down_enabled' => true,
-                    'unvote_enabled'    => true,
-                    'anonymous_vote'    => false,     //hides voters identity from the vote log
+        
+        $this->options_default = array(
+                    'vote_down_enabled' => 'on',
+                    'unvote_enabled'    => 'on',
+                    'anonymous_vote'    => 'off',     //hides voters identity from the vote log
                     'vote_up_cap'       => 'read',  //capability required to vote up
                     'vote_down_cap'     => 'read',  //capability required to vote down
                     'unvote_cap'        => 'read',  
-                    'embed_links'       => true,    //embed score, vote up, vote down links above replies
-                    'embed_votes_log'   => true,    //embed vote log after replies content
+                    'embed_links'       => 'on',    //embed score, vote up, vote down links above replies
+                    'embed_votes_log'   => 'on',    //embed vote log after replies content
 
                 );
-                
-                $options = array();
-                //get db value
-                //(stored in this shitty way as we are forced to by the bbPress settings API)
-                foreach ($this->options_default as $slug => $value){
-                    $db_key = '_bbpvotes_'.$slug;
-                    $options[$slug] = get_option( $db_key, $value );
-                }
-
-                $this->options = apply_filters('bbpvotes_options',$options);
+        
+        $options = wp_parse_args(get_option( $this->metaname_options), $this->options_default);
+        $this->options = apply_filters('bbpvotes_options',$options);
 
 	}
         
@@ -154,6 +150,8 @@ class bbP_Votes {
             add_action("wp", array(&$this,"process_vote_link"));    //vote without ajax
             
             add_action( 'delete_user', array(&$this,"delete_user_votes"));
+        
+            add_filter( 'plugin_action_links_' . $this->basename, array($this, 'plugin_bottom_links')); //bottom links
 
 	}
 
@@ -206,6 +204,23 @@ class bbP_Votes {
             wp_enqueue_style('bbpvotes');
             wp_enqueue_style('font-awesome');
 	}
+    
+    function plugin_bottom_links($links){
+        
+        $links[] = sprintf('<a target="_blank" href="%s">%s</a>',$this->donate_link,__('Donate','bbppu'));//donate
+        /*
+        if (current_user_can('manage_options')) {
+            $settings_page_url = add_query_arg(
+                array(
+                    'page'=>bbP_Pencil_Unread_Settings::$menu_slug
+                ),
+                get_admin_url(null, 'options-general.php')
+            );
+            $links[] = sprintf('<a href="%s">%s</a>',esc_url($settings_page_url),__('Settings'));
+        }
+        */
+        return $links;
+    }
         
     function register_query_vars($vars) {
         $vars[] = $this->var_sort_by_vote;
@@ -221,7 +236,7 @@ class bbP_Votes {
         
         function vote_admin_link($links, $post_id){
             
-            if (!$this->options['embed_links']) return $links;
+            if ( bbpvotes()->get_options('embed_links') != 'on' ) return $links;
 
             $args = array();
             
@@ -247,14 +262,30 @@ class bbP_Votes {
 
         function display_reply_author_reputation(){
             $score = bbpvotes_get_author_score( bbp_get_reply_author_id() );
-            $score_display = bbpvotes_number_format($score);
-            printf( '<div class="bbpvotes-author-reputation" alt="%1$s">%2$s</div>', __('Reputation:','bbpvotes'), sprintf(__('%s pts','bbpvotes'),'<span class="bbpvotes-score">'.$score_display.'</span>') );
+            
+            if (!$score) return;
+
+            $formatted_score = bbpvotes_number_format($score);
+            $text = sprintf( _n( '%s pt', '%s pts', $formatted_score, 'bbpvotes' ), $formatted_score );
+            $text = apply_filters('bbpvotes_get_author_reputation_text',$text,$score,$formatted_score);
+            
+            $label_text = __('Reputation','bbpvotes');
+            $score_el = sprintf('<span class="bbpvotes-score bbpvotes-score-author">%s</span>',$text);
+
+            printf( '<div class="bbpvotes-score-wrapper bbpvotes-score-author-wrapper" alt="%1$s"><label>%1$s</label>%2$s</div>',$label_text,$score_el );
         }
         function display_topic_score(){
             if (!$votes = bbpvotes_get_votes_for_post( bbp_get_topic_id() )) return;
+            
             $score = bbpvotes_get_votes_score_for_post( bbp_get_topic_id() );
-            $score_display = bbpvotes_number_format($score);
-            printf( '<span class="bbpvotes-topic-score">%1$s</span>', sprintf(__('Score: %s pts','bbpvotes'),'<span class="bbpvotes-score">'.$score_display.'</span>') );
+            $formatted_score = bbpvotes_number_format($score);
+            $text = sprintf( _n( '%s pt', '%s pts', $formatted_score, 'bbpvotes' ), $formatted_score );
+            $text = apply_filters('bbpvotes_get_topic_score_text',$text,$score,$formatted_score);
+            
+            $label_text = __('Score','bbpvotes');
+            $score_el = sprintf('<span class="bbpvotes-score bbpvotes-score-topic">%s</span>',$text);
+            
+            printf( '<div class="bbpvotes-score-wrapper bbpvotes-score-topic-wrapper" alt="%1$s"><label>%1$s</label>%2$s</div>',$label_text,$score_el );
         }
         
         function topics_loop_sort_link(){
@@ -336,7 +367,7 @@ class bbP_Votes {
             
             if ( $unvote ){ //vote duplicate : remove or block it
 
-                if (bbpvotes()->options['unvote_enabled']){ //remove vote
+                if (bbpvotes()->get_options('unvote_enabled') == 'on'){ //remove vote
                     
                     if ( !bbpvotes_can_user_unvote_for_post($post->ID) ){
                         
@@ -393,10 +424,9 @@ class bbP_Votes {
         
         function sort_by_votes( $query ){
             global $wp_query;
-            
-            //TO FIX TO CHECK
-            //$query_var = $query->get( $this->var_sort_by_vote ); //should be this ?
-            $query_var = $wp_query->get( $this->var_sort_by_vote );
+
+            $query_var = $query->get( $this->var_sort_by_vote ); //should be this ?
+            //$query_var = $wp_query->get( $this->var_sort_by_vote );
 
             if ( ( !$order = $query_var ) || !in_array($query->get('post_type'),$this->supported_post_types) ) return $query;
 
@@ -523,7 +553,7 @@ class bbP_Votes {
         
         function post_content_append_votes_log( $content = '', $post_id = 0 ) {
             
-            if (!$this->options['embed_votes_log']) return $content;
+            if ( bbpvotes()->get_options('embed_votes_log') != 'on' ) return $content;
             
             if ( is_admin() || is_feed() ) return $content; // Bail if in admin or feed
             if (!in_array( get_post_type( $post_id ),$this->supported_post_types ) ) return $content;
@@ -532,6 +562,14 @@ class bbP_Votes {
             //$topic_id = bbp_get_topic_id( $topic_id );
 
             return apply_filters( 'bbpvotes_post_append_votes', $content . bbpvotes_get_post_votes_log($post_id), $content, $post_id );
+        }
+    
+        function get_options($keys = null){
+            return bbpvotes_get_array_value($keys,$this->options);
+        }
+
+        public function get_default_option($keys = null){
+            return bbpvotes_get_array_value($keys,$this->options_default);
         }
 
         function debug_log($message) {
