@@ -86,6 +86,7 @@ If you need more complex customization, you can filter the links using those hoo
 * Use Dashicons instead of fontAwesome.
 * Migrate options page
 * Option to choose the 'score' unit (pts, kudos, ...)
+* Option to choose which post types are enabled for voting (topics/replies)
 
 = 1.1.0 =
 * supports unvoting (by reclicking the link)

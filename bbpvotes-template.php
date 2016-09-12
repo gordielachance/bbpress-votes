@@ -258,7 +258,7 @@ function bbpvotes_has_user_voted_up_for_post( $post_id = null, $user_id = 0 ){
 
     $args = array(
         'p'             => $post_id,
-        'post_type'	=> get_post_type($post_id), //TO FIX this should not be set to 'any' but does not work - or eventually bbpvotes()->supported_post_types
+        'post_type'	=> get_post_type($post_id), //TO FIX this should not be set to 'any' but does not work - or eventually bbpvotes_get_enabled_post_types()
         'post_status'   => 'any',
         'posts_per_page' => -1,
         'meta_query' => array(
@@ -456,7 +456,7 @@ function bbpvotes_get_votes_down_by_user_count( $user_id = 0, $post_args = null 
         //2. limit results with regular posts query (allow to exclude by post status, etc.)
 
         $defaults = array(
-            'post_type'         => bbpvotes()->supported_post_types,
+            'post_type'         => bbpvotes_get_enabled_post_types(),
             'post_status'       => 'any',
             'posts_per_page'    => -1,
             'fields'            => 'ids',
@@ -506,7 +506,7 @@ function bbpvotes_get_votes_up_by_user_count( $user_id = 0, $post_args = null ){
         //2. limit results with regular posts query (allow to exclude by post status, etc.)
 
         $defaults = array(
-            'post_type'         => bbpvotes()->supported_post_types,
+            'post_type'         => bbpvotes_get_enabled_post_types(),
             'post_status'       => 'any',
             'posts_per_page'    => -1,
             'fields'            => 'ids',
@@ -547,7 +547,7 @@ function bbpvotes_get_author_score( $author_id = 0, $post_args = null ){
     
     $defaults = array(
         'author'            => $author_id,
-        'post_type'         => bbpvotes()->supported_post_types,
+        'post_type'         => bbpvotes_get_enabled_post_types(),
         'post_status'       => 'any',
         'fields'            => 'ids',
         'posts_per_page'    => -1

@@ -48,8 +48,6 @@ class bbP_Votes {
 
     public $var_sort_by_vote = 'vote_sort';
 
-    public $supported_post_types;
-    
     public $donate_link = 'http://bit.ly/gbreant';
     
         
@@ -88,6 +86,7 @@ class bbP_Votes {
 		$this->plugin_url = plugin_dir_url ( $this->file );
         
         $this->options_default = array(
+                    'ignored_post_type' => array(),
                     'vote_down_enabled' => 'on',
                     'unvote_enabled'    => 'on',
                     'anonymous_vote'    => 'off',     //hides voters identity from the vote log
@@ -130,7 +129,6 @@ class bbP_Votes {
 
             //scripts & styles
             add_action('bbp_init', array($this, 'register_scripts_styles'));
-            add_action('bbp_init', array($this, 'populate_post_types'), 9);
             add_action('bbp_init', array($this, 'upgrade'));                  //upgrade
             
             add_action('bbp_enqueue_scripts', array($this, 'scripts_styles'));
@@ -229,242 +227,236 @@ class bbP_Votes {
         return $vars;
     }
 
-        function populate_post_types(){
-            $this->supported_post_types = array(
-                bbp_get_topic_post_type(),
-                bbp_get_reply_post_type()
-            );
-        }
+    function vote_admin_link($links, $post_id){
+
+        if ( bbpvotes()->get_options('embed_links') != 'on' ) return $links;
         
-        function vote_admin_link($links, $post_id){
-            
-            if ( bbpvotes()->get_options('embed_links') != 'on' ) return $links;
+        //is this post type enabled ?
+        if ( !in_array(get_post_type($post_id),bbpvotes_get_enabled_post_types()) ) return $links;
 
-            $args = array();
-            
-            // Parse arguments against default values
-            $r = bbp_parse_args( $args, array (
-                    'id'     => $post_id,
-                    'before' => '<span class="bbp-admin-links">',
-                    'after'  => '</span>',
-                    'sep'    => ' | ',
-                    'links'  => array()
-            ), 'get_topic_admin_links' );
+        $args = array();
 
-            $vote_links = array(
-                'score' => bbpvotes_get_score_link( $r ),
-                'vote_up' => bbpvotes_get_vote_up_link( $r ),
-                'vote_down' => bbpvotes_get_vote_down_link( $r )
-            );
-            
-            $vote_links = array_filter($vote_links);
-            
-            return array_merge($vote_links,$links);
+        // Parse arguments against default values
+        $r = bbp_parse_args( $args, array (
+                'id'     => $post_id,
+                'before' => '<span class="bbp-admin-links">',
+                'after'  => '</span>',
+                'sep'    => ' | ',
+                'links'  => array()
+        ), 'get_topic_admin_links' );
+
+        $vote_links = array(
+            'score' => bbpvotes_get_score_link( $r ),
+            'vote_up' => bbpvotes_get_vote_up_link( $r ),
+            'vote_down' => bbpvotes_get_vote_down_link( $r )
+        );
+
+        $vote_links = array_filter($vote_links);
+
+        return array_merge($vote_links,$links);
+    }
+
+    function display_reply_author_karma(){
+        $score = bbpvotes_get_author_score( bbp_get_reply_author_id() );
+
+        if (!$score) return;
+
+        $text = bbpvotes_get_score_text($score);
+        $label_text = __('Karma:','bbpvotes');
+        $score_el = sprintf('<span>%s</span>',$text);
+
+        printf( '<div class="bbpvotes-score-wrapper bbpvotes-score-author-wrapper" alt="%1$s"><label>%1$s</label> %2$s</div>',$label_text,$score_el );
+    }
+
+    /*
+    In a list of topics, display the topic scores
+    */
+    function display_topic_score(){
+        if (!$score = bbpvotes_get_votes_for_post( bbp_get_topic_id() )) return;
+
+        $text = bbpvotes_get_score_text($score);
+        $label_text = __('Score:','bbpvotes');
+        $score_el = sprintf('<span>%s</span>',$text);
+
+        printf( '<span class="bbpvotes-score-wrapper bbpvotes-score-topic-wrapper" alt="%1$s"><label>%1$s</label> %2$s</span>',$label_text,$score_el );
+    }
+
+    function topics_loop_sort_link(){
+        global $wp_query;
+        $link = get_permalink();
+
+        $query_var = $wp_query->get( $this->var_sort_by_vote );
+
+
+        if (!$query_var){
+            $link = add_query_arg(array($this->var_sort_by_vote => 'score_desc'),$link);
+            $text = __('Sort topics by votes','bbpvotes');
+        }else{
+            $text = __('Sort topics by date','bbpvotes');
         }
 
-        function display_reply_author_karma(){
-            $score = bbpvotes_get_author_score( bbp_get_reply_author_id() );
-            
-            if (!$score) return;
+        printf('<a href="%1$s" class="bbpvotes-forum-sort-topics">%2$s</a>',$link,$text);
+    }
 
-            $text = bbpvotes_get_score_text($score);
-            $label_text = __('Karma:','bbpvotes');
-            $score_el = sprintf('<span>%s</span>',$text);
+    /**
+     * 
+     * @param type $post_id
+     * @param type $vote MUST BE defined, MUST BE a boolean
+     * @return boolean|\WP_Error
+     */
 
-            printf( '<div class="bbpvotes-score-wrapper bbpvotes-score-author-wrapper" alt="%1$s"><label>%1$s</label> %2$s</div>',$label_text,$score_el );
+    function do_post_vote( $post_id, $vote = null ){
+
+        //check vote value
+        if (is_bool($vote) === false) return new WP_Error( 'vote_is_not_bool', __( 'Vote is not a boolean', 'bbpvotes' ));
+        $voteplus = ($vote === true);
+        $voteminus = ($vote === false);
+
+        if (!$post = get_post( $post_id )) return false;
+
+        if ( ($voteplus && !bbpvotes_can_user_vote_up_for_post($post->ID)) || ($voteminus && !bbpvotes_can_user_vote_down_for_post($post->ID)) ){
+            return new WP_Error( 'missing_capability', __( "You don't have the required capability to vote", 'bbpvotes' ));
         }
-    
-        /*
-        In a list of topics, display the topic scores
-        */
-        function display_topic_score(){
-            if (!$votes = bbpvotes_get_votes_for_post( bbp_get_topic_id() )) return;
 
-            $score = bbpvotes_get_votes_score_for_post( bbp_get_topic_id() );
-            
-            $text = bbpvotes_get_score_text($score);
-            $label_text = __('Score:','bbpvotes');
-            $score_el = sprintf('<span>%s</span>',$text);
-            
-            printf( '<span class="bbpvotes-score-wrapper bbpvotes-score-topic-wrapper" alt="%1$s"><label>%1$s</label> %2$s</span>',$label_text,$score_el );
+        $user_id = get_current_user_id();
+
+
+        //check user is not post author
+        if ($post->post_author == $user_id){
+            return new WP_Error( 'user_is_author', __( 'You cannot vote for your own post', 'bbpvotes' ));
         }
-        
-        function topics_loop_sort_link(){
-            global $wp_query;
-            $link = get_permalink();
-            
-            $query_var = $wp_query->get( $this->var_sort_by_vote );
 
-            
-            if (!$query_var){
-                $link = add_query_arg(array($this->var_sort_by_vote => 'score_desc'),$link);
-                $text = __('Sort topics by votes','bbpvotes');
+        //get current votes
+        $post_score = bbpvotes_get_votes_score_for_post( $post->ID );
+        $votes_count = bbpvotes_get_votes_count_for_post( $post->ID );
+        $is_previous_vote_up = bbpvotes_has_user_voted_up_for_post($post->ID,$user_id);
+        $is_previous_vote_down = bbpvotes_has_user_voted_down_for_post($post->ID,$user_id);
+        $toggle_vote = ( ($voteplus && $is_previous_vote_down) || ($voteminus && $is_previous_vote_up) );
+        $unvote = ( ($voteplus && $is_previous_vote_up) || ($voteminus && $is_previous_vote_down) );
+
+        //remove old vote first if any
+        if ( $toggle_vote || $unvote ){
+
+            //get previous vote meta key
+            if ($is_previous_vote_down){
+                $meta_previous_vote = $this->metaname_post_vote_down;
             }else{
-                $text = __('Sort topics by date','bbpvotes');
+                $meta_previous_vote = $this->metaname_post_vote_up;
             }
 
-            printf('<a href="%1$s" class="bbpvotes-forum-sort-topics">%2$s</a>',$link,$text);
-        }
+            if ( $removed_previous_vote = delete_post_meta($post->ID, $meta_previous_vote, $user_id) ){ //successfully deleted
 
-        /**
-         * 
-         * @param type $post_id
-         * @param type $vote MUST BE defined, MUST BE a boolean
-         * @return boolean|\WP_Error
-         */
+                $votes_count--;
 
-        function do_post_vote( $post_id, $vote = null ){
-            
-            //check vote value
-            if (is_bool($vote) === false) return new WP_Error( 'vote_is_not_bool', __( 'Vote is not a boolean', 'bbpvotes' ));
-            $voteplus = ($vote === true);
-            $voteminus = ($vote === false);
-            
-            if (!$post = get_post( $post_id )) return false;
-            
-            if ( ($voteplus && !bbpvotes_can_user_vote_up_for_post($post->ID)) || ($voteminus && !bbpvotes_can_user_vote_down_for_post($post->ID)) ){
-                return new WP_Error( 'missing_capability', __( "You don't have the required capability to vote", 'bbpvotes' ));
-            }
-
-            $user_id = get_current_user_id();
-                    
-            
-            //check user is not post author
-            if ($post->post_author == $user_id){
-                return new WP_Error( 'user_is_author', __( 'You cannot vote for your own post', 'bbpvotes' ));
-            }
-            
-            //get current votes
-            $post_score = bbpvotes_get_votes_score_for_post( $post->ID );
-            $votes_count = bbpvotes_get_votes_count_for_post( $post->ID );
-            $is_previous_vote_up = bbpvotes_has_user_voted_up_for_post($post->ID,$user_id);
-            $is_previous_vote_down = bbpvotes_has_user_voted_down_for_post($post->ID,$user_id);
-            $toggle_vote = ( ($voteplus && $is_previous_vote_down) || ($voteminus && $is_previous_vote_up) );
-            $unvote = ( ($voteplus && $is_previous_vote_up) || ($voteminus && $is_previous_vote_down) );
-            
-            //remove old vote first if any
-            if ( $toggle_vote || $unvote ){
-                
-                //get previous vote meta key
+                //restore score
                 if ($is_previous_vote_down){
-                    $meta_previous_vote = $this->metaname_post_vote_down;
+                    $post_score++;
                 }else{
-                    $meta_previous_vote = $this->metaname_post_vote_up;
+                    $post_score--;
                 }
 
-                if ( $removed_previous_vote = delete_post_meta($post->ID, $meta_previous_vote, $user_id) ){ //successfully deleted
-                    
-                    $votes_count--;
-
-                    //restore score
-                    if ($is_previous_vote_down){
-                        $post_score++;
-                    }else{
-                        $post_score--;
-                    }
-                    
-                }
             }
-            
-            if ( $unvote ){ //vote duplicate : remove or block it
-
-                if (bbpvotes()->get_options('unvote_enabled') == 'on'){ //remove vote
-                    
-                    if ( !bbpvotes_can_user_unvote_for_post($post->ID) ){
-                        
-                        return new WP_Error( 'missing_capability', __( "You don't have the required capability to unvote", 'bbpvotes' ));
-                        
-                    }else{
-                        
-                        if ($removed_previous_vote){
-                            update_post_meta($post->ID, $this->metaname_post_vote_score, $post_score);
-                            update_post_meta($post->ID, $this->metaname_post_vote_count, $votes_count);
-                            do_action('bbpvotes_do_post_unvote',$post->ID,$user_id);
-                        }else{
-                            return new WP_Error( 'unvoting_error', __( 'Error while unvoting for this post', 'bbpvotes' ));
-                        }
- 
-
-                    }
-                }else{ //block vote
-                    return new WP_Error( 'already_voted', __( 'You have already voted for this post', 'bbpvotes' ));
-                }
-
-            }else{ //process vote
-                //get new vote meta key
-                if ( $voteplus ){
-                    $meta_vote = $this->metaname_post_vote_up;
-                }else{
-                    $meta_vote = $this->metaname_post_vote_down;
-                }
-
-                if ( $result = add_post_meta($post->ID, $meta_vote, $user_id) ){
-
-                    $votes_count++;
-
-                    //update score
-                    if ($voteplus){
-                        $post_score++;
-                    }else{
-                        $post_score--;
-                    }
-
-                    update_post_meta($post->ID, $this->metaname_post_vote_score, $post_score);
-                    update_post_meta($post->ID, $this->metaname_post_vote_count, $votes_count);
-
-                }else{
-                    return new WP_Error( 'voting_error', __( 'Error while voting for this post', 'bbpvotes' ));
-                }
-                
-                do_action('bbpvotes_do_post_vote',$post->ID,$user_id,$vote);
-                
-            }
-
-            return true;
         }
-        
-        function sort_by_votes( $query ){
-            global $wp_query;
 
-            $query_var = $query->get( $this->var_sort_by_vote ); //should be this ?
-            //$query_var = $wp_query->get( $this->var_sort_by_vote );
+        if ( $unvote ){ //vote duplicate : remove or block it
 
-            if ( ( !$order = $query_var ) || !in_array($query->get('post_type'),$this->supported_post_types) ) return $query;
+            if (bbpvotes()->get_options('unvote_enabled') == 'on'){ //remove vote
 
-            switch ($order){
-                
-                case 'score_desc':
+                if ( !bbpvotes_can_user_unvote_for_post($post->ID) ){
 
-                    $query->set('meta_key', $this->metaname_post_vote_score );
-                    $query->set('orderby','meta_value_num');
-                    $query->set('order', 'DESC');
+                    return new WP_Error( 'missing_capability', __( "You don't have the required capability to unvote", 'bbpvotes' ));
 
-                break;
+                }else{
 
-                case 'score_asc':
-                    $query->set('meta_key', $this->metaname_post_vote_score );
-                    $query->set('orderby','meta_value_num');
-                    $query->set('order', 'ASC');
-                break;
-            
-                case 'count_desc':
+                    if ($removed_previous_vote){
+                        update_post_meta($post->ID, $this->metaname_post_vote_score, $post_score);
+                        update_post_meta($post->ID, $this->metaname_post_vote_count, $votes_count);
+                        do_action('bbpvotes_do_post_unvote',$post->ID,$user_id);
+                    }else{
+                        return new WP_Error( 'unvoting_error', __( 'Error while unvoting for this post', 'bbpvotes' ));
+                    }
 
-                    $query->set('meta_key', $this->metaname_post_vote_count );
-                    $query->set('orderby','meta_value_num');
-                    $query->set('order', 'DESC');
 
-                break;
-
-                case 'count_asc':
-                    $query->set('meta_key', $this->metaname_post_vote_count );
-                    $query->set('orderby','meta_value_num');
-                    $query->set('order', 'ASC');
-                break;
-            
+                }
+            }else{ //block vote
+                return new WP_Error( 'already_voted', __( 'You have already voted for this post', 'bbpvotes' ));
             }
 
-            return $query;
+        }else{ //process vote
+            //get new vote meta key
+            if ( $voteplus ){
+                $meta_vote = $this->metaname_post_vote_up;
+            }else{
+                $meta_vote = $this->metaname_post_vote_down;
+            }
+
+            if ( $result = add_post_meta($post->ID, $meta_vote, $user_id) ){
+
+                $votes_count++;
+
+                //update score
+                if ($voteplus){
+                    $post_score++;
+                }else{
+                    $post_score--;
+                }
+
+                update_post_meta($post->ID, $this->metaname_post_vote_score, $post_score);
+                update_post_meta($post->ID, $this->metaname_post_vote_count, $votes_count);
+
+            }else{
+                return new WP_Error( 'voting_error', __( 'Error while voting for this post', 'bbpvotes' ));
+            }
+
+            do_action('bbpvotes_do_post_vote',$post->ID,$user_id,$vote);
+
         }
+
+        return true;
+    }
+
+    function sort_by_votes( $query ){
+        global $wp_query;
+
+        $query_var = $query->get( $this->var_sort_by_vote ); //should be this ?
+        //$query_var = $wp_query->get( $this->var_sort_by_vote );
+
+        if ( ( !$order = $query_var ) || !in_array($query->get('post_type'),bbpvotes_get_enabled_post_types()) ) return $query;
+
+        switch ($order){
+
+            case 'score_desc':
+
+                $query->set('meta_key', $this->metaname_post_vote_score );
+                $query->set('orderby','meta_value_num');
+                $query->set('order', 'DESC');
+
+            break;
+
+            case 'score_asc':
+                $query->set('meta_key', $this->metaname_post_vote_score );
+                $query->set('orderby','meta_value_num');
+                $query->set('order', 'ASC');
+            break;
+
+            case 'count_desc':
+
+                $query->set('meta_key', $this->metaname_post_vote_count );
+                $query->set('orderby','meta_value_num');
+                $query->set('order', 'DESC');
+
+            break;
+
+            case 'count_asc':
+                $query->set('meta_key', $this->metaname_post_vote_count );
+                $query->set('orderby','meta_value_num');
+                $query->set('order', 'ASC');
+            break;
+
+        }
+
+        return $query;
+    }
         
 	//vote without ajax
 	public function process_vote_link() {
@@ -486,7 +478,7 @@ class bbP_Votes {
                 break;
             };
             
-            if (in_array( get_post_type( $post_id ),$this->supported_post_types ) ){ //single forum
+            if (in_array( get_post_type( $post_id ),bbpvotes_get_enabled_post_types() ) ){ //single forum
                     if( !wp_verify_nonce( $_GET['_wpnonce'], $nonce ) ) return false;
                     self::do_post_vote($post_id,$vote);
             }
@@ -517,7 +509,7 @@ class bbP_Votes {
             }
             
             $user_votes_args = array(
-                'post_type'         => $this->supported_post_types,
+                'post_type'         => bbpvotes_get_enabled_post_types(),
                 'post_status'   => 'any',
                 'posts_per_page'    => -1,
                 'fields'            => 'ids',
@@ -557,7 +549,7 @@ class bbP_Votes {
             if ( bbpvotes()->get_options('embed_votes_log') != 'on' ) return $content;
             
             if ( is_admin() || is_feed() ) return $content; // Bail if in admin or feed
-            if (!in_array( get_post_type( $post_id ),$this->supported_post_types ) ) return $content;
+            if (!in_array( get_post_type( $post_id ),bbpvotes_get_enabled_post_types() ) ) return $content;
 
             // Validate the ID
             //$topic_id = bbp_get_topic_id( $topic_id );

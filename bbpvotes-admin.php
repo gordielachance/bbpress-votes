@@ -32,7 +32,7 @@ class bbP_Votes_Admin {
     //TO FIX NOT WORKING
     function handle_post_columns(){
         
-        foreach ( (array)bbpvotes()->supported_post_types as $post_type ){
+        foreach ( (array)bbpvotes_get_enabled_post_types() as $post_type ){
             add_filter("manage_".$post_type."_posts_columns", array(&$this,'post_column_register'), 5);
             add_action("manage_".$post_type."_posts_custom_column" , array(&$this,'post_column_content'), 10, 2 );
             add_filter("manage_edit-".$post_type."_sortable_columns", array(&$this,'post_column_sortable') );
@@ -44,7 +44,7 @@ class bbP_Votes_Admin {
      * Scripts for backend
      */
     public function scripts_styles($hook) {
-        if( ( !in_array(get_post_type(),bbpvotes()->supported_post_types) ) && ($hook != 'playlist_page_bbpvotes-options') ) return;
+        if( ( !in_array(get_post_type(),bbpvotes_get_enabled_post_types()) ) && ($hook != 'playlist_page_bbpvotes-options') ) return;
         wp_enqueue_style( 'bbpvotes-admin', bbpvotes()->plugin_url .'_inc/css/admin.css', array(), bbpvotes()->version );
     }
     

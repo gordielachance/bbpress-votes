@@ -21,8 +21,6 @@ class bbP_Votes_Settings {
             self::$menu_slug,
             array($this,'settings_page') //this function will output the content of the 'Music' page.
         );
-        
-        
 
     }
 
@@ -34,6 +32,16 @@ class bbP_Votes_Settings {
             $new_input = bbpvotes()->options_default;
             
         }else{ //sanitize values
+            
+            //post types
+            $post_types = bbpvotes_get_allowed_post_types();
+            if( isset( $input['post_types'] ) ){
+                foreach ((array)$post_types as $post_type){
+                    if (!array_key_exists($post_type, $input['post_types'])) $new_input['ignored_post_type'][] = $post_type;
+                }
+            }else{
+                $new_input['ignored_post_type'] = $post_types;
+            }
 
             $new_input['vote_down_enabled'] = ( isset($input['vote_down_enabled']) ) ? 'on' : 'off';
             $new_input['unvote_enabled'] = ( isset($input['unvote_enabled']) ) ? 'on' : 'off';
@@ -78,6 +86,14 @@ class bbP_Votes_Settings {
             array( $this, 'bbpvotes_settings_general_desc' ), // Callback
             'bbpvotes-settings-page' // Page
         );
+        
+        add_settings_field(
+            'post_types_enabled', 
+            __('Post types enabled','bbpvotes'), 
+            array( $this, 'post_types_callback' ), 
+            'bbpvotes-settings-page', // Page
+            'settings_general'//section
+        );
 
         add_settings_field(
             'enable_downvoting', 
@@ -115,7 +131,14 @@ class bbP_Votes_Settings {
             __('Units','bbpvotes'), 
             array( $this, 'units_callback' ), 
             'bbpvotes-settings-page', // Page
-            'settings_general'//section
+            'settings_display'//section
+        );
+        
+        add_settings_section(
+            'settings_replies', // ID
+            __('Replies','bbpvotes'), // Title
+            array( $this, 'bbpvotes_settings_replies_desc' ), // Callback
+            'bbpvotes-settings-page' // Page
         );
 
         
@@ -138,6 +161,29 @@ class bbP_Votes_Settings {
     
     function bbpvotes_settings_general_desc(){
         
+    }
+    
+    /** 
+     * Get the settings option array and print one of its values
+     */
+    function post_types_callback(){
+
+        $enabled = bbpvotes_get_enabled_post_types();
+        $allowed = bbpvotes_get_allowed_post_types();
+
+        foreach ((array)$allowed as $slug){
+
+            if ( !$post_type = get_post_type_object($slug) ) continue;
+            $name = $post_type->name;
+            $checked = checked( in_array($slug,$enabled), true, false );
+            printf(
+                '<input type="checkbox" name="%1$s[post_types][%2$s]" value="on" %3$s/> %4$s ',
+                bbpvotes()->metaname_options,
+                $slug,
+                $checked,
+                $name
+            );
+        }
     }
     
     function enable_downvoting_callback(){
@@ -206,6 +252,12 @@ class bbP_Votes_Settings {
         
         
     }
+    
+    function bbpvotes_settings_replies_desc(){
+        
+    }
+    
+    
 
     function bbpvotes_settings_system_desc(){
         

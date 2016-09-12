@@ -32,7 +32,7 @@ function bbpvotes_rebuild_scores(){
     $post_ids = array();
     
     $default_query_args = array(
-        'post_type'         => bbpvotes()->supported_post_types,
+        'post_type'         => bbpvotes_get_enabled_post_types(),
         'post_status'   => 'any',
         'posts_per_page'    => -1,
         'fields'            => 'ids'
@@ -106,5 +106,41 @@ function bbpvotes_number_format( $number, $min_value = 1000, $decimal = 1 ) {
     return apply_filters('bbpvotes_number_format',$output,$number);
 }
 
+function bbpvotes_get_enabled_post_types(){
+    $enabled = array();
+    $allowed = bbpvotes_get_allowed_post_types();
+    $ignored = bbpvotes()->get_options('ignored_post_type');
+
+    foreach((array)$allowed as $post_type){
+        if( in_array($post_type,$ignored) ) continue;
+        if ( !get_post_type_object($post_type) ) continue;
+        $enabled[] = $post_type;
+    }
+    return $enabled;
+}
+
+function bbpvotes_get_allowed_post_types(){
+    /*
+    $post_types = get_post_types();
+    $disabled = apply_filters('bbpvotes_option_post_type_disabled',array(
+        'attachment',
+        'revision',
+        'nav_menu_item'
+        )
+    );
+    $allowed = array();
+    foreach ((array)$post_types as $post_type){
+        if (in_array($post_type,$disabled)) continue;
+        $allowed[] = $post_type;
+    }
+    */
+
+    $allowed = array(
+        bbp_get_topic_post_type(),
+        bbp_get_reply_post_type()
+    );
+
+    return $allowed;
+}
 
 ?>
