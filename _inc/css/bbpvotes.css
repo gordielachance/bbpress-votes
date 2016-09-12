@@ -1,34 +1,35 @@
-/* line 5, ../scss/bbpvotes.scss */
-#bbpress-forums .bbpvotes-score {
-  font-weight: bold;
-}
-/* line 10, ../scss/bbpvotes.scss */
+/* line 7, ../scss/bbpvotes.scss */
 #bbpress-forums .bbpvotes-score-wrapper label:after {
   content: ": ";
 }
-/* line 15, ../scss/bbpvotes.scss */
-#bbpress-forums .bbpvotes-score-wrapper.bbpvotes-score-author-wrapper label {
-  display: none;
+/* line 11, ../scss/bbpvotes.scss */
+#bbpress-forums .bbpvotes-score-wrapper span {
+  font-weight: bold;
 }
-/* line 20, ../scss/bbpvotes.scss */
+/* line 14, ../scss/bbpvotes.scss */
+#bbpress-forums .bbpvotes-score-wrapper.bbpvotes-score-author-wrapper {
+  font-size: 11px;
+  padding: 1em 0;
+}
+/* line 19, ../scss/bbpvotes.scss */
 #bbpress-forums .bbpvotes-score-wrapper.bbpvotes-score-topic-wrapper:before {
   content: ", ";
 }
-/* line 27, ../scss/bbpvotes.scss */
+/* line 26, ../scss/bbpvotes.scss */
 #bbpress-forums .bbpvotes-forum-sort-topics {
   margin-bottom: 15px;
   display: block;
   text-align: right;
 }
-/* line 36, ../scss/bbpvotes.scss */
+/* line 35, ../scss/bbpvotes.scss */
 #bbpress-forums .bbp-reply-header .bbp-admin-links a.bbpvotes-post-vote-link .bbpvotes-icon {
   display: none;
 }
-/* line 39, ../scss/bbpvotes.scss */
+/* line 38, ../scss/bbpvotes.scss */
 #bbpress-forums .bbp-reply-header .bbp-admin-links a.bbpvotes-post-vote-link.bbpvotes-db-loading .bbpvotes-icon-loading, #bbpress-forums .bbp-reply-header .bbp-admin-links a.bbpvotes-post-vote-link.bbpvotes-db-success .bbpvotes-icon-success, #bbpress-forums .bbp-reply-header .bbp-admin-links a.bbpvotes-post-vote-link.bbpvotes-db-error .bbpvotes-icon-error {
   display: inherit;
 }
-/* line 49, ../scss/bbpvotes.scss */
+/* line 48, ../scss/bbpvotes.scss */
 #bbpress-forums .bbp-reply-content .bbpvotes-post-votes-log {
   border-top: 1px dotted #ddd;
   width: 100%;
@@ -37,7 +38,7 @@
   font-size: 11px;
   color: #aaa;
 }
-/* line 56, ../scss/bbpvotes.scss */
+/* line 55, ../scss/bbpvotes.scss */
 #bbpress-forums .bbp-reply-content .bbpvotes-post-votes-log a {
   position: relative;
   display: inline-block !important;
@@ -45,7 +46,7 @@
   width: 30px;
   height: 30px;
 }
-/* line 62, ../scss/bbpvotes.scss */
+/* line 61, ../scss/bbpvotes.scss */
 #bbpress-forums .bbp-reply-content .bbpvotes-post-votes-log a img {
   display: inline !important;
   vertical-align: top;
@@ -53,7 +54,7 @@
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-/* line 67, ../scss/bbpvotes.scss */
+/* line 66, ../scss/bbpvotes.scss */
 #bbpress-forums .bbp-reply-content .bbpvotes-post-votes-log a .bbpvotes-avatar-icon-vote {
   position: absolute;
   bottom: -2.5px;
@@ -61,4 +62,6 @@
   font-size: 1em;
   width: 1em;
   height: 1em;
+  color: white;
+  background-color: #C4C4C4;
 }

@@ -158,7 +158,7 @@ class bbP_Votes {
 	function load_plugin_textdomain(){
 		load_plugin_textdomain('bbpvotes', FALSE, $this->plugin_dir.'languages/');
 	}
-        
+  
 	function upgrade(){
 		global $wpdb;
 		
@@ -270,22 +270,26 @@ class bbP_Votes {
             $text = apply_filters('bbpvotes_get_author_reputation_text',$text,$score,$formatted_score);
             
             $label_text = __('Reputation','bbpvotes');
-            $score_el = sprintf('<span class="bbpvotes-score bbpvotes-score-author">%s</span>',$text);
+            $score_el = sprintf('<span>%s</span>',$text);
 
             printf( '<div class="bbpvotes-score-wrapper bbpvotes-score-author-wrapper" alt="%1$s"><label>%1$s</label>%2$s</div>',$label_text,$score_el );
         }
+    
+        /*
+        In a list of topics, display the topic scores
+        */
         function display_topic_score(){
             if (!$votes = bbpvotes_get_votes_for_post( bbp_get_topic_id() )) return;
-            
+
             $score = bbpvotes_get_votes_score_for_post( bbp_get_topic_id() );
             $formatted_score = bbpvotes_number_format($score);
             $text = sprintf( _n( '%s pt', '%s pts', $formatted_score, 'bbpvotes' ), $formatted_score );
             $text = apply_filters('bbpvotes_get_topic_score_text',$text,$score,$formatted_score);
             
             $label_text = __('Score','bbpvotes');
-            $score_el = sprintf('<span class="bbpvotes-score bbpvotes-score-topic">%s</span>',$text);
+            $score_el = sprintf('<span>%s</span>',$text);
             
-            printf( '<div class="bbpvotes-score-wrapper bbpvotes-score-topic-wrapper" alt="%1$s"><label>%1$s</label>%2$s</div>',$label_text,$score_el );
+            printf( '<span class="bbpvotes-score-wrapper bbpvotes-score-topic-wrapper" alt="%1$s"><label>%1$s</label>%2$s</span>',$label_text,$score_el );
         }
         
         function topics_loop_sort_link(){

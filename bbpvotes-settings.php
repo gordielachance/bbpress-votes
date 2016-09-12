@@ -144,7 +144,7 @@ class bbP_Votes_Settings {
             '<input type="checkbox" name="%s[anonymous_vote]" value="on" %s /> %s',
             bbpvotes()->metaname_options,
             checked( $option, 'on', false ),
-            __( 'Allow users to cancel their vote', 'bbpvotes' )
+            __( "Hide voters identity from the vote log", 'bbpvotes' )
         );
     }
 

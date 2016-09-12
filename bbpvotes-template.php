@@ -360,10 +360,10 @@ function bbpvotes_get_post_votes_log( $post_id = 0 ) {
 
                 if ($score>0){
                     $title = sprintf( esc_html__( '%1$s voted up', 'bbpvotes' ), $user->display_name);
-                    $icon = '<i class="bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-plus fa fa-plus-square"></i>';
+                    $icon = '<span class="dashicons dashicons-plus bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-plus"></span>';
                 }else{
                     $title = sprintf( esc_html__( '%1$s voted down', 'bbpvotes' ), $user->display_name);
-                    $icon = '<i class="bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-minus fa fa-minus-square"></i>';
+                    $icon = '<span class="bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-minus bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-minus"></span>';
                 }
 
 

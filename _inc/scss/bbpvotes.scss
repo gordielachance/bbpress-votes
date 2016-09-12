@@ -1,20 +1,19 @@
 @import "compass/css3";
 
 #bbpress-forums{
-    
-    .bbpvotes-score{
-        font-weight:bold;
-    }
+
     .bbpvotes-score-wrapper{
         label{
             &:after { 
                 content: ": ";
             }
         }
+        span{
+            font-weight:bold;
+        }
         &.bbpvotes-score-author-wrapper{
-            label{
-                display:none;
-            }
+            font-size: 11px;
+            padding:1em 0;
         }
         &.bbpvotes-score-topic-wrapper{
             &:before{
@@ -65,12 +64,15 @@
                 @include box-shadow(none);
               }
               .bbpvotes-avatar-icon-vote {
-                position: absolute;
-                bottom: -2.5px;
-                right: -2.5px;
-                font-size: 1em;
-                width: 1em;
-                height: 1em;
+                    position: absolute;
+                    bottom: -2.5px;
+                    right: -2.5px;
+                    font-size: 1em;
+                    width: 1em;
+                    height: 1em;
+                    color:white;
+                    background-color:#C4C4C4;
+                  
               }
             }
         }

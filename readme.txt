@@ -81,6 +81,11 @@ If you need more complex customization, you can filter the links using those hoo
 1. A single reply with score, vote up and vote down links (top) and vote log (after reply content)
 
 == Changelog ==
+
+= 1.2 =
+* Use Dashicons instead of fontAwesome.
+* Migrate options page
+
 = 1.1.0 =
 * supports unvoting (by reclicking the link)
 * "sort by votes" link before topics loop
