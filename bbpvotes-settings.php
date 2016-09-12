@@ -38,6 +38,16 @@ class bbP_Votes_Settings {
             $new_input['vote_down_enabled'] = ( isset($input['vote_down_enabled']) ) ? 'on' : 'off';
             $new_input['unvote_enabled'] = ( isset($input['unvote_enabled']) ) ? 'on' : 'off';
             $new_input['anonymous_vote'] = ( isset($input['anonymous_vote']) ) ? 'on' : 'off';
+            
+            //units
+
+            $new_input['unit_singular'] = trim($input['unit_singular']);
+            $new_input['unit_plural'] = trim($input['unit_plural']);
+
+            if (!$new_input['unit_singular'] || !$new_input['unit_plural'] ){
+                unset($new_input['unit_singular']);
+                unset($new_input['unit_plural']);
+            }
     
         }
         
@@ -89,6 +99,21 @@ class bbP_Votes_Settings {
             'anonymous_voting', 
             __('Anonymous voting','bbpvotes'), 
             array( $this, 'anonymous_vote_callback' ), 
+            'bbpvotes-settings-page', // Page
+            'settings_general'//section
+        );
+        
+        add_settings_section(
+            'settings_display', // ID
+            __('Display','bbpvotes'), // Title
+            array( $this, 'bbpvotes_settings_display_desc' ), // Callback
+            'bbpvotes-settings-page' // Page
+        );
+        
+        add_settings_field(
+            'units', 
+            __('Units','bbpvotes'), 
+            array( $this, 'units_callback' ), 
             'bbpvotes-settings-page', // Page
             'settings_general'//section
         );
@@ -146,6 +171,40 @@ class bbP_Votes_Settings {
             checked( $option, 'on', false ),
             __( "Hide voters identity from the vote log", 'bbpvotes' )
         );
+    }
+    
+    function bbpvotes_settings_display_desc(){
+        
+    }
+    
+    function units_callback(){
+        $singular_value = bbpvotes()->get_options('unit_singular');
+        $singular_default = bbpvotes()->get_default_option('unit_singular');
+        $plural_value = bbpvotes()->get_options('unit_plural');
+        $plural_default = bbpvotes()->get_default_option('unit_plural');
+        
+        $singular = sprintf(
+            '%s <input type="text" name="%s[unit_singular]" value="%s" placeholder="%s"/> %s',
+            '<strong>'.__('singular:','bbpvotes').'</strong>',
+            bbpvotes()->metaname_options,
+            $singular_value,
+            $singular_default,
+            '<small> — '.sprintf(__( "Where %s will be replaced by a number", 'bbpvotes' ),'<code>%s</code>').'</small>'
+        );
+        
+        $plural = sprintf(
+            '%s <input type="text" name="%s[unit_plural]" value="%s" placeholder="%s"/> %s',
+            '<strong>'.__('plural:','bbpvotes').'</strong>',
+            bbpvotes()->metaname_options,
+            $plural_value,
+            $plural_default,
+            '<small> — '.sprintf(__( "Where %s will be replaced by a number", 'bbpvotes' ),'<code>%s</code>').'</small>'
+        );
+        
+        printf('<p>%s</p><p>%s</p>',$singular,$plural);
+        
+        
+        
     }
 
     function bbpvotes_settings_system_desc(){

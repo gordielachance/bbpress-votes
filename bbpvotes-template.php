@@ -1,5 +1,21 @@
 <?php
 
+function bbpvotes_get_score_text($score){
+    $formatted_score = bbpvotes_number_format($score);
+    $string = null;
+
+    if ($score <= 1){
+        $string = bbpvotes()->get_options('unit_singular');
+    }else{
+        $string = bbpvotes()->get_options('unit_plural');
+    }
+
+    $retval = str_replace('%s',$formatted_score,$string);
+
+    return apply_filters('bbpvotes_get_score_text',$retval,$score);
+
+}
+
 function bbpvotes_get_score_link( $args = '' ) {
 
         // Parse arguments against default values

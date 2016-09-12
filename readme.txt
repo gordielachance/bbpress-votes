@@ -85,6 +85,7 @@ If you need more complex customization, you can filter the links using those hoo
 = 1.2 =
 * Use Dashicons instead of fontAwesome.
 * Migrate options page
+* Option to choose the 'score' unit (pts, kudos, ...)
 
 = 1.1.0 =
 * supports unvoting (by reclicking the link)

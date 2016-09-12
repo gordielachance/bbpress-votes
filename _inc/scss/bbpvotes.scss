@@ -4,9 +4,6 @@
 
     .bbpvotes-score-wrapper{
         label{
-            &:after { 
-                content: ": ";
-            }
         }
         span{
             font-weight:bold;

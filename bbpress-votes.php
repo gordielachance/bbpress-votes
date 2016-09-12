@@ -96,6 +96,8 @@ class bbP_Votes {
                     'unvote_cap'        => 'read',  
                     'embed_links'       => 'on',    //embed score, vote up, vote down links above replies
                     'embed_votes_log'   => 'on',    //embed vote log after replies content
+                    'unit_singular'     => '%s pt',
+                    'unit_plural'       => '%s pts',
 
                 );
         
@@ -139,7 +141,7 @@ class bbP_Votes {
             add_filter( 'bbp_get_reply_content', array($this, 'post_content_append_votes_log'),  98,  2 );
             add_filter( 'bbp_get_topic_content', array($this, 'post_content_append_votes_log'),  98,  2 );
             
-            add_action( 'bbp_theme_after_reply_author_details', array($this, 'display_reply_author_reputation'));
+            add_action( 'bbp_theme_after_reply_author_details', array($this, 'display_reply_author_karma'));
             add_action( 'bbp_theme_after_topic_started_by', array($this, 'display_topic_score'));
             add_action( 'bbp_template_before_topics_loop', array($this, 'topics_loop_sort_link'),9);
             
@@ -260,19 +262,16 @@ class bbP_Votes {
             return array_merge($vote_links,$links);
         }
 
-        function display_reply_author_reputation(){
+        function display_reply_author_karma(){
             $score = bbpvotes_get_author_score( bbp_get_reply_author_id() );
             
             if (!$score) return;
 
-            $formatted_score = bbpvotes_number_format($score);
-            $text = sprintf( _n( '%s pt', '%s pts', $formatted_score, 'bbpvotes' ), $formatted_score );
-            $text = apply_filters('bbpvotes_get_author_reputation_text',$text,$score,$formatted_score);
-            
-            $label_text = __('Reputation','bbpvotes');
+            $text = bbpvotes_get_score_text($score);
+            $label_text = __('Karma:','bbpvotes');
             $score_el = sprintf('<span>%s</span>',$text);
 
-            printf( '<div class="bbpvotes-score-wrapper bbpvotes-score-author-wrapper" alt="%1$s"><label>%1$s</label>%2$s</div>',$label_text,$score_el );
+            printf( '<div class="bbpvotes-score-wrapper bbpvotes-score-author-wrapper" alt="%1$s"><label>%1$s</label> %2$s</div>',$label_text,$score_el );
         }
     
         /*
@@ -282,14 +281,12 @@ class bbP_Votes {
             if (!$votes = bbpvotes_get_votes_for_post( bbp_get_topic_id() )) return;
 
             $score = bbpvotes_get_votes_score_for_post( bbp_get_topic_id() );
-            $formatted_score = bbpvotes_number_format($score);
-            $text = sprintf( _n( '%s pt', '%s pts', $formatted_score, 'bbpvotes' ), $formatted_score );
-            $text = apply_filters('bbpvotes_get_topic_score_text',$text,$score,$formatted_score);
             
-            $label_text = __('Score','bbpvotes');
+            $text = bbpvotes_get_score_text($score);
+            $label_text = __('Score:','bbpvotes');
             $score_el = sprintf('<span>%s</span>',$text);
             
-            printf( '<span class="bbpvotes-score-wrapper bbpvotes-score-topic-wrapper" alt="%1$s"><label>%1$s</label>%2$s</span>',$label_text,$score_el );
+            printf( '<span class="bbpvotes-score-wrapper bbpvotes-score-topic-wrapper" alt="%1$s"><label>%1$s</label> %2$s</span>',$label_text,$score_el );
         }
         
         function topics_loop_sort_link(){
