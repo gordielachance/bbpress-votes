@@ -47,6 +47,7 @@ class bbP_Votes_Settings {
             $new_input['unvote_enabled'] = ( isset($input['unvote_enabled']) ) ? 'on' : 'off';
             $new_input['anonymous_vote'] = ( isset($input['anonymous_vote']) ) ? 'on' : 'off';
             $new_input['embed_votes_log'] = ( isset($input['embed_votes_log']) ) ? 'on' : 'off';
+            $new_input['karma_cache_minutes'] = (int) $input['karma_cache_minutes'];
             
             //units
 
@@ -157,6 +158,14 @@ class bbP_Votes_Settings {
             'bbpvotes-settings-page' // Page
         );
 
+        add_settings_field(
+            'karma_cache_minutes', 
+            __('Cache karma','bbpvotes'), 
+            array( $this, 'karma_cache_minutes_callback' ), 
+            'bbpvotes-settings-page', // Page
+            'settings_system'//section
+        );
+        
         add_settings_field(
             'reset_options', 
             __('Reset Options','bbpvotes'), 
@@ -278,6 +287,17 @@ class bbP_Votes_Settings {
 
     function bbpvotes_settings_system_desc(){
         
+    }
+    
+    function karma_cache_minutes_callback(){
+        $option = bbpvotes()->get_options('karma_cache_minutes');
+        printf(
+            '<input type="number" name="%s[karma_cache_minutes]" value="%s" min="0" /> %s %s',
+            bbpvotes()->metaname_options, // Option name
+            $option,
+            __("seconds","bbpvotes"),
+            '<small> — '.__("how long should we cache karma for users ?","bbpvotes").'</small>'
+        );
     }
     
     function reset_options_callback(){

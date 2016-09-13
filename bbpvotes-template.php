@@ -548,7 +548,7 @@ function bbpvotes_get_author_score( $author_id = 0, $post_args = null ){
         $transient_name = 'bbpvotes_karma_user_'.$author_id;
         $transient_duration = bbpvotes()->get_options('karma_cache_minutes') * MINUTE_IN_SECONDS;
 
-        if ( ($transient_duration) && ( false === ( $retval = get_transient( $transient_name ) ) ) ) { //check for transient
+        if ( (!$transient_duration) || ( false === ( $retval = get_transient( $transient_name ) ) ) ) { //is cache enabled ?
 
             //Get all posts by this author
 
@@ -592,7 +592,10 @@ function bbpvotes_get_author_score( $author_id = 0, $post_args = null ){
                 $retval = 0;
             }
             
-            set_transient( $transient_name, $retval, $transient_duration );
+            if (!$transient_duration){
+                set_transient( $transient_name, $retval, $transient_duration );
+            }
+            
         }
         
     }
