@@ -151,17 +151,8 @@ class bbP_Votes {
             add_action("wp", array(&$this,"process_vote_link"));    //vote without ajax
             
             add_action( 'delete_user', array(&$this,"delete_user_votes"));
-        
-            add_action('wp_footer', array(&$this,"afac"));
 
 	}
-    
-    function afac(){
-       global $wpdb;
-       echo "<pre>";
-       print_r($wpdb->queries);
-       echo "</pre>";
-    }
 
 	function load_plugin_textdomain(){
 		load_plugin_textdomain('bbpvotes', FALSE, $this->plugin_dir.'languages/');
