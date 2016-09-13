@@ -21,12 +21,29 @@ class bbP_Votes_Admin {
 
     function setup_actions(){
 
-        add_filter('plugin_action_links', array($this,'settings_link'), 10, 4 );    //Add settings link to plugins page
-        
         add_action('bbp_init', array($this, 'handle_post_columns') );
+        
+        add_filter( 'plugin_action_links_' . bbpvotes()->basename, array($this, 'plugin_bottom_links')); //bottom links
 
         //add_action( 'admin_enqueue_scripts',  array( $this, 'scripts_styles' ) );
 
+    }
+    
+    function plugin_bottom_links($links){
+        
+        $links[] = sprintf('<a target="_blank" href="%s">%s</a>',bbpvotes()->donate_link,__('Donate','bbppu'));//donate
+
+        if (current_user_can('manage_options')) {
+            $settings_page_url = add_query_arg(
+                array(
+                    'page'=>bbP_Votes_Settings::$menu_slug
+                ),
+                get_admin_url(null, 'options-general.php')
+            );
+            $links[] = sprintf('<a href="%s">%s</a>',esc_url($settings_page_url),__('Settings'));
+        }
+
+        return $links;
     }
     
     //TO FIX NOT WORKING
@@ -46,20 +63,6 @@ class bbP_Votes_Admin {
     public function scripts_styles($hook) {
         if( ( !in_array(get_post_type(),bbpvotes_get_enabled_post_types()) ) && ($hook != 'playlist_page_bbpvotes-options') ) return;
         wp_enqueue_style( 'bbpvotes-admin', bbpvotes()->plugin_url .'_inc/css/admin.css', array(), bbpvotes()->version );
-    }
-    
-    //Add settings link on plugin page
-    function settings_link($links, $file) {
-        
-        //make sure it is our plugin we are modifying
-        if ( $file != bbpvotes()->basename ) return $links;
-
-        return array_merge( $links, array(
-            'settings' => '<a href="'.admin_url('options-general.php?page=bbpress').'">'.__('Settings').'</a>'
-            )
-        );
-
-        return $links;
     }
 
     function post_column_register($defaults){
