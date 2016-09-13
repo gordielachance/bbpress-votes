@@ -151,8 +151,6 @@ class bbP_Votes {
             add_action("wp", array(&$this,"process_vote_link"));    //vote without ajax
             
             add_action( 'delete_user', array(&$this,"delete_user_votes"));
-        
-            add_filter( 'plugin_action_links_' . $this->basename, array($this, 'plugin_bottom_links')); //bottom links
 
 	}
 
@@ -205,23 +203,6 @@ class bbP_Votes {
             wp_enqueue_style('bbpvotes');
             wp_enqueue_style('font-awesome');
 	}
-    
-    function plugin_bottom_links($links){
-        
-        $links[] = sprintf('<a target="_blank" href="%s">%s</a>',$this->donate_link,__('Donate','bbppu'));//donate
-        /*
-        if (current_user_can('manage_options')) {
-            $settings_page_url = add_query_arg(
-                array(
-                    'page'=>bbP_Pencil_Unread_Settings::$menu_slug
-                ),
-                get_admin_url(null, 'options-general.php')
-            );
-            $links[] = sprintf('<a href="%s">%s</a>',esc_url($settings_page_url),__('Settings'));
-        }
-        */
-        return $links;
-    }
         
     function register_query_vars($vars) {
         $vars[] = $this->var_sort_by_vote;
