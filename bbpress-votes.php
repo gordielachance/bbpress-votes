@@ -390,7 +390,7 @@ class bbP_Votes {
                 return new WP_Error( 'voting_error', __( 'Error while voting for this post', 'bbpvotes' ));
             }
 
-            do_action('bbpvotes_do_post_vote',$post->ID,$user_id,$vote);
+            do_action('bbpvotes_do_post_vote',$post->ID,$user_id,$vote,$post_score);
 
         }
 
