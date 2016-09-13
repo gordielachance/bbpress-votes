@@ -86,17 +86,18 @@ class bbP_Votes {
 		$this->plugin_url = plugin_dir_url ( $this->file );
         
         $this->options_default = array(
-                    'ignored_post_type' => array(),
-                    'vote_down_enabled' => 'on',
-                    'unvote_enabled'    => 'on',
-                    'embed_links'       => 'on',    //embed score, vote up, vote down links above replies
-                    'embed_votes_log'   => 'on',    //embed vote log below replies content
-                    'anonymous_vote'    => 'off',     //hides voters identity from the vote log
-                    'unit_singular'     => '%s pt',
-                    'unit_plural'       => '%s pts',
-                    'vote_up_cap'       => 'read',  //capability required to vote up
-                    'vote_down_cap'     => 'read',  //capability required to vote down
-                    'unvote_cap'        => 'read'
+                    'ignored_post_type'     => array(),
+                    'vote_down_enabled'     => 'on',
+                    'unvote_enabled'        => 'on',
+                    'embed_links'           => 'on',    //embed score, vote up, vote down links above replies
+                    'embed_votes_log'       => 'on',    //embed vote log below replies content
+                    'anonymous_vote'        => 'off',     //hides voters identity from the vote log
+                    'unit_singular'         => '%s pt',
+                    'unit_plural'           => '%s pts',
+                    'vote_up_cap'           => 'read',  //capability required to vote up
+                    'vote_down_cap'         => 'read',  //capability required to vote down
+                    'unvote_cap'            => 'read',
+                    'karma_cache_minutes'   => 60, //how many minutes do we cache a user's karma ?    
 
                 );
         

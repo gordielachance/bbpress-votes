@@ -538,53 +538,67 @@ function bbpvotes_get_votes_total_by_user_count( $user_id = 0, $post_args = null
 
 function bbpvotes_get_author_score( $author_id = 0, $post_args = null ){
     global $wpdb;
-    
-    
+
     if (!$author_id) $author_id = get_current_user_id();
     
-    //Get posts by this author
-    
-    $defaults = array(
-        'author'            => $author_id,
-        'post_type'         => bbpvotes_get_enabled_post_types(),
-        'post_status'       => 'any',
-        'fields'            => 'ids',
-        'posts_per_page'    => -1
-    );
-    
-    // Parse arguments against default values
-    $post_args = bbp_parse_args( $post_args, $defaults, 'bbpvotes_get_votes_down_for_author_count_post_args' );
-    
-    $query = new WP_Query( $post_args );
+    $retval = false;
 
-    if ($query->found_posts){
+    if ($author_id){
         
-        $post_ids = $query->posts;
-        $post_ids_str = implode(',',$post_ids);
+        $transient_name = 'bbpvotes_karma_user_'.$author_id;
+        $transient_duration = bbpvotes()->get_options('karma_cache_minutes') * MINUTE_IN_SECONDS;
 
-        //Get sum of scores for those posts
-        
-        $query =  $wpdb->prepare(
-                "
-                SELECT      meta_value
-                FROM        $wpdb->postmeta
-                WHERE       meta_key = %s 
-                            AND post_id IN ({$post_ids_str})
-                ",
-                bbpvotes()->metaname_post_vote_score
-        );
-        
-        $votes_scores = $wpdb->get_col( $query ); 
-        
-        bbpvotes()->debug_log("bbpvotes_get_author_score for user#".$author_id);
-        bbpvotes()->debug_log($query);
+        if ( ($transient_duration) && ( false === ( $retval = get_transient( $transient_name ) ) ) ) { //check for transient
 
-        return array_sum($votes_scores);
+            //Get all posts by this author
 
-    }else{
-        return 0;
+            $defaults = array(
+                'author'            => $author_id,
+                'post_type'         => bbpvotes_get_enabled_post_types(),
+                'post_status'       => 'any',
+                'fields'            => 'ids',
+                'posts_per_page'    => -1
+            );
+
+            $post_args = bbp_parse_args( $post_args, $defaults, 'bbpvotes_get_votes_down_for_author_count_post_args' );
+
+            $query = new WP_Query( $post_args );
+
+            if ($query->found_posts){
+
+                $post_ids = $query->posts;
+                $post_ids_str = implode(',',$post_ids);
+
+                //Get sum of scores for those posts
+
+                $query =  $wpdb->prepare(
+                        "
+                        SELECT      meta_value
+                        FROM        $wpdb->postmeta
+                        WHERE       meta_key = %s 
+                                    AND post_id IN ({$post_ids_str})
+                        ",
+                        bbpvotes()->metaname_post_vote_score
+                );
+
+                $votes_scores = $wpdb->get_col( $query ); 
+
+                bbpvotes()->debug_log("bbpvotes_get_author_score for user#".$author_id);
+                bbpvotes()->debug_log($query);
+
+                $retval = array_sum($votes_scores);
+
+            }else{
+                $retval = 0;
+            }
+            
+            set_transient( $transient_name, $retval, $transient_duration );
+        }
+        
     }
     
+    return $retval;
+
 }
 
 function bbpvotes_classes_attr($classes=false){
