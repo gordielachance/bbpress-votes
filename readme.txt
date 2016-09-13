@@ -87,6 +87,7 @@ If you need more complex customization, you can filter the links using those hoo
 = 1.2.1 =
 * Fixed bug when displaying topic score
 * Fixed typo in settings
+* Rebuild scores option
 
 = 1.2 =
 * Migrate options page
