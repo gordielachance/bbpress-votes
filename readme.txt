@@ -84,6 +84,10 @@ If you need more complex customization, you can filter the links using those hoo
 
 == Changelog ==
 
+= 1.2.1 =
+* Fixed bug when displaying topic score
+* Fixed typo in settings
+
 = 1.2 =
 * Migrate options page
 * Option to choose the 'score' unit (pts, kudos, ...)
