@@ -1,35 +1,31 @@
-/* line 7, ../scss/bbpvotes.scss */
-#bbpress-forums .bbpvotes-score-wrapper label:after {
-  content: ": ";
-}
-/* line 11, ../scss/bbpvotes.scss */
+/* line 8, ../scss/bbpvotes.scss */
 #bbpress-forums .bbpvotes-score-wrapper span {
   font-weight: bold;
 }
-/* line 14, ../scss/bbpvotes.scss */
+/* line 11, ../scss/bbpvotes.scss */
 #bbpress-forums .bbpvotes-score-wrapper.bbpvotes-score-author-wrapper {
   font-size: 11px;
   padding: 1em 0;
 }
-/* line 19, ../scss/bbpvotes.scss */
+/* line 16, ../scss/bbpvotes.scss */
 #bbpress-forums .bbpvotes-score-wrapper.bbpvotes-score-topic-wrapper:before {
   content: ", ";
 }
-/* line 26, ../scss/bbpvotes.scss */
+/* line 23, ../scss/bbpvotes.scss */
 #bbpress-forums .bbpvotes-forum-sort-topics {
   margin-bottom: 15px;
   display: block;
   text-align: right;
 }
-/* line 35, ../scss/bbpvotes.scss */
+/* line 32, ../scss/bbpvotes.scss */
 #bbpress-forums .bbp-reply-header .bbp-admin-links a.bbpvotes-post-vote-link .bbpvotes-icon {
   display: none;
 }
-/* line 38, ../scss/bbpvotes.scss */
+/* line 35, ../scss/bbpvotes.scss */
 #bbpress-forums .bbp-reply-header .bbp-admin-links a.bbpvotes-post-vote-link.bbpvotes-db-loading .bbpvotes-icon-loading, #bbpress-forums .bbp-reply-header .bbp-admin-links a.bbpvotes-post-vote-link.bbpvotes-db-success .bbpvotes-icon-success, #bbpress-forums .bbp-reply-header .bbp-admin-links a.bbpvotes-post-vote-link.bbpvotes-db-error .bbpvotes-icon-error {
   display: inherit;
 }
-/* line 48, ../scss/bbpvotes.scss */
+/* line 45, ../scss/bbpvotes.scss */
 #bbpress-forums .bbp-reply-content .bbpvotes-post-votes-log {
   border-top: 1px dotted #ddd;
   width: 100%;
@@ -38,7 +34,7 @@
   font-size: 11px;
   color: #aaa;
 }
-/* line 55, ../scss/bbpvotes.scss */
+/* line 52, ../scss/bbpvotes.scss */
 #bbpress-forums .bbp-reply-content .bbpvotes-post-votes-log a {
   position: relative;
   display: inline-block !important;
@@ -46,7 +42,7 @@
   width: 30px;
   height: 30px;
 }
-/* line 61, ../scss/bbpvotes.scss */
+/* line 58, ../scss/bbpvotes.scss */
 #bbpress-forums .bbp-reply-content .bbpvotes-post-votes-log a img {
   display: inline !important;
   vertical-align: top;
@@ -54,7 +50,7 @@
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-/* line 66, ../scss/bbpvotes.scss */
+/* line 63, ../scss/bbpvotes.scss */
 #bbpress-forums .bbp-reply-content .bbpvotes-post-votes-log a .bbpvotes-avatar-icon-vote {
   position: absolute;
   bottom: -2.5px;
