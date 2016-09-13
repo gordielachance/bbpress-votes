@@ -13,19 +13,17 @@
 }
 /* line 23, ../scss/bbpvotes.scss */
 #bbpress-forums .bbpvotes-forum-sort-topics {
-  margin-bottom: 15px;
-  display: block;
-  text-align: right;
+  padding: 0 0.5em;
 }
-/* line 32, ../scss/bbpvotes.scss */
+/* line 30, ../scss/bbpvotes.scss */
 #bbpress-forums .bbp-reply-header .bbp-admin-links a.bbpvotes-post-vote-link .bbpvotes-icon {
   display: none;
 }
-/* line 35, ../scss/bbpvotes.scss */
+/* line 33, ../scss/bbpvotes.scss */
 #bbpress-forums .bbp-reply-header .bbp-admin-links a.bbpvotes-post-vote-link.bbpvotes-db-loading .bbpvotes-icon-loading, #bbpress-forums .bbp-reply-header .bbp-admin-links a.bbpvotes-post-vote-link.bbpvotes-db-success .bbpvotes-icon-success, #bbpress-forums .bbp-reply-header .bbp-admin-links a.bbpvotes-post-vote-link.bbpvotes-db-error .bbpvotes-icon-error {
   display: inherit;
 }
-/* line 45, ../scss/bbpvotes.scss */
+/* line 43, ../scss/bbpvotes.scss */
 #bbpress-forums .bbp-reply-content .bbpvotes-post-votes-log {
   border-top: 1px dotted #ddd;
   width: 100%;
@@ -34,7 +32,7 @@
   font-size: 11px;
   color: #aaa;
 }
-/* line 52, ../scss/bbpvotes.scss */
+/* line 50, ../scss/bbpvotes.scss */
 #bbpress-forums .bbp-reply-content .bbpvotes-post-votes-log a {
   position: relative;
   display: inline-block !important;
@@ -42,7 +40,7 @@
   width: 30px;
   height: 30px;
 }
-/* line 58, ../scss/bbpvotes.scss */
+/* line 56, ../scss/bbpvotes.scss */
 #bbpress-forums .bbp-reply-content .bbpvotes-post-votes-log a img {
   display: inline !important;
   vertical-align: top;
@@ -50,7 +48,7 @@
   -webkit-box-shadow: none;
   box-shadow: none;
 }
-/* line 63, ../scss/bbpvotes.scss */
+/* line 61, ../scss/bbpvotes.scss */
 #bbpress-forums .bbp-reply-content .bbpvotes-post-votes-log a .bbpvotes-avatar-icon-vote {
   position: absolute;
   bottom: -2.5px;

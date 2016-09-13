@@ -4,7 +4,7 @@ Plugin Name: bbPress Votes
 Plugin URI: http://wordpress.org/extend/plugins/bbpress-pencil-unread
 Description: Allow users to vote up or down to topics and replies inside bbPress, just like you can on StackOverflow for example.
 Author: G.Breant
-Version: 1.2.1
+Version: 1.2.2
 Author URI: http://sandbox.pencil2d.org/
 License: GPL2+
 Text Domain: bbpvotes
@@ -17,7 +17,7 @@ class bbP_Votes {
         /**
 	 * @public string plugin version
 	 */
-	public $version = '1.2.1';
+	public $version = '1.2.2';
         
 	/**
 	 * @public string plugin DB version
@@ -46,7 +46,7 @@ class bbP_Votes {
     public $metaname_post_vote_up = 'bbpvotes_vote_up';
     public $metaname_post_vote_down = 'bbpvotes_vote_down';
 
-    public $var_sort_by_vote = 'vote_sort';
+    public $var_sort_by_vote = 'bbpvote_sort';
 
     public $donate_link = 'http://bit.ly/gbreant';
     
@@ -142,17 +142,26 @@ class bbP_Votes {
             
             add_action( 'bbp_theme_after_reply_author_details', array($this, 'display_reply_author_karma'));
             add_action( 'bbp_theme_after_topic_started_by', array($this, 'display_topic_score'));
-            add_action( 'bbp_template_before_topics_loop', array($this, 'topics_loop_sort_link'),9);
-            
+            add_action( 'bbp_template_before_single_forum', array($this, 'topics_loop_sort_link'),9);
             add_action( 'bp_include', array($this, 'includes_buddypress'));     //buddypress
             
+            add_filter( 'bbp_before_has_topics_parse_args', array($this, 'add_topic_sort_arg'));
             add_action( 'pre_get_posts', array($this, 'sort_by_votes'));
             
             add_action("wp", array(&$this,"process_vote_link"));    //vote without ajax
             
             add_action( 'delete_user', array(&$this,"delete_user_votes"));
+        
+            add_action('wp_footer', array(&$this,"afac"));
 
 	}
+    
+    function afac(){
+       global $wpdb;
+       echo "<pre>";
+       print_r($wpdb->queries);
+       echo "</pre>";
+    }
 
 	function load_plugin_textdomain(){
 		load_plugin_textdomain('bbpvotes', FALSE, $this->plugin_dir.'languages/');
@@ -277,7 +286,7 @@ class bbP_Votes {
             $text = __('Sort topics by date','bbpvotes');
         }
 
-        printf('<a href="%1$s" class="bbpvotes-forum-sort-topics">%2$s</a>',$link,$text);
+        printf('<span id="bbpvotes-toggle"><a href="%1$s" class="bbpvotes-forum-sort-topics">%2$s</a></span>',$link,$text);
     }
 
     /**
@@ -396,16 +405,24 @@ class bbP_Votes {
 
         return true;
     }
+    
+    /**
+    Adds the bbpress sort args (if any) when fetching the topics
+    **/
+    
+    function add_topic_sort_arg($args){
+        global $wp_query;
+        if ( $sort_order = $wp_query->get( $this->var_sort_by_vote ) ){
+            $args[$this->var_sort_by_vote] = $sort_order;
+        }
+        return $args;
+    }
 
     function sort_by_votes( $query ){
-        global $wp_query;
 
-        $query_var = $query->get( $this->var_sort_by_vote ); //should be this ?
-        //$query_var = $wp_query->get( $this->var_sort_by_vote );
+        if ( ( !$sort_order = $query->get( $this->var_sort_by_vote ) ) || !in_array($query->get('post_type'),bbpvotes_get_enabled_post_types()) ) return $query;
 
-        if ( ( !$order = $query_var ) || !in_array($query->get('post_type'),bbpvotes_get_enabled_post_types()) ) return $query;
-
-        switch ($order){
+        switch ($sort_order){
 
             case 'score_desc':
 
@@ -436,10 +453,9 @@ class bbP_Votes {
             break;
 
         }
-
         return $query;
     }
-        
+ 
 	//vote without ajax
 	public function process_vote_link() {
 

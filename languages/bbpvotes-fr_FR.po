@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: VERSION\n"
-"POT-Creation-Date: 2016-09-13 07:51+0000\n"
-"PO-Revision-Date: 2016-09-13 07:58+0000\n"
+"POT-Creation-Date: 2016-09-13 09:10+0000\n"
+"PO-Revision-Date: 2016-09-13 09:11+0000\n"
 "Last-Translator: gordie <gordie.lachance@gmail.com>\n"
 "Language-Team: French (France)\n"
 "Language: fr-FR\n"
@@ -12,38 +12,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1\n"
 "Report-Msgid-Bugs-To: \n"
 "X-Generator: Loco - https://localise.biz/"
-
-#: bbpress-votes.php:266
-msgid "Karma:"
-msgstr "Karma:"
-
-#: bbpress-votes.php:279
-msgid "Score:"
-msgstr "Score:"
-
-#: bbpress-votes.php:294
-msgid "Sort topics by votes"
-msgstr "Trier les sujets par votes"
-
-#: bbpress-votes.php:296
-msgid "Sort topics by date"
-msgstr "Trier les sujets par date"
-
-#: bbpress-votes.php:368
-msgid "You don't have the required capability to unvote"
-msgstr "Vous n'avez pas la permission d'annuler votre vote"
-
-#: bbpress-votes.php:377
-msgid "Error while unvoting for this post"
-msgstr "Erreur en annulant le vote pour ce post"
-
-#: bbpvotes-ajax.php:34 bbpvotes-template.php:37
-msgid "Score: %1$s"
-msgstr "Score: %1$s"
-
-#: bbpvotes-ajax.php:35 bbpvotes-template.php:38
-msgid "Votes count: %1$s"
-msgstr "Total des votes: %1$s"
 
 #: bbpvotes-functions.php:92
 msgctxt "billion unit"
@@ -65,107 +33,235 @@ msgstr ""
 msgid "bbPress Votes"
 msgstr ""
 
+#: bbpvotes-settings.php:175
+msgid "Rebuild scores"
+msgstr "Recalculer les cores"
+
+#: bbpvotes-settings.php:183
+msgid "Reset options"
+msgstr "Réinitialiser les options"
+
+#: bbpvotes-settings.php:310
+msgid "minutes"
+msgstr "minutes"
+
+#: bbpvotes-settings.php:311
+msgid "How long should we cache karma for users ?"
+msgstr "Combien de temps faut il cacher le karma pour les utilisateurs ?"
+
+#. Option name
+#: bbpvotes-settings.php:319
+msgid "Rebuild all scores"
+msgstr "Réinitialiser tous les scores"
+
+#: bbpvotes-settings.php:320
+msgid "This could be slow to compute"
+msgstr "Ceci peut être lent à calculer"
+
+#. Plugin URI of the plugin/theme
+msgid "http://wordpress.org/extend/plugins/bbpress-pencil-unread"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "G.Breant"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://sandbox.pencil2d.org/"
+msgstr ""
+
+#: bbpress-votes.php:196 bbpvotes-template.php:27 bbpvotes-template.php:95
+msgid "Vote up"
+msgstr "Voter 'pour'"
+
+#: bbpress-votes.php:197 bbpvotes-template.php:148
+msgid "Vote down"
+msgstr "Voter 'contre'"
+
+#: bbpress-votes.php:198 bbpvotes-template.php:123
+msgid "You voted up"
+msgstr "Vous avez voté 'pour'"
+
+#: bbpress-votes.php:199 bbpvotes-template.php:175
+msgid "You voted down"
+msgstr "Vous avez voté 'contre'"
+
+#: bbpress-votes.php:247
+msgid "Karma:"
+msgstr "Karma:"
+
+#: bbpress-votes.php:260
+msgid "Score:"
+msgstr "Score:"
+
+#: bbpress-votes.php:275
+msgid "Sort topics by votes"
+msgstr "Trier les sujets par votes"
+
+#: bbpress-votes.php:277
+msgid "Sort topics by date"
+msgstr "Trier les sujets par date"
+
+#: bbpress-votes.php:293 bbpvotes-buddypress.php:12
+msgid "Vote is not a boolean"
+msgstr "La variable vote n'est pas booléenne"
+
+#: bbpress-votes.php:300
+msgid "You don't have the required capability to vote"
+msgstr "Vous n'avez pas l'autorisation de voter"
+
+#: bbpress-votes.php:308
+msgid "You cannot vote for your own post"
+msgstr "Vous ne pouvez pas voter pour votre propre article"
+
+#: bbpress-votes.php:349
+msgid "You don't have the required capability to unvote"
+msgstr "Vous n'avez pas la permission d'annuler votre vote"
+
+#: bbpress-votes.php:358
+msgid "Error while unvoting for this post"
+msgstr "Erreur en annulant le vote pour ce post"
+
+#: bbpress-votes.php:364
+msgid "You have already voted for this post"
+msgstr "Vous avez déjà voté pour cet article"
+
+#: bbpress-votes.php:390
+msgid "Error while voting for this post"
+msgstr "Erreur lors du vote"
+
+#: bbpvotes-admin.php:75 bbpvotes-admin.php:103
+msgid "Score"
+msgstr "Score"
+
+#: bbpvotes-ajax.php:34 bbpvotes-template.php:37
+msgid "Score: %1$s"
+msgstr "Score: %1$s"
+
+#: bbpvotes-ajax.php:35 bbpvotes-template.php:38
+msgid "Votes count: %1$s"
+msgstr "Total des votes: %1$s"
+
+#: bbpvotes-buddypress.php:5
+msgid "New vote up"
+msgstr "Nouveau vote 'pour'"
+
+#: bbpvotes-buddypress.php:6
+msgid "New vote down"
+msgstr "Nouveau vote 'contre'"
+
 #. ID
-#: bbpvotes-settings.php:87
+#: bbpvotes-settings.php:91
 msgid "General"
 msgstr "Général"
 
-#: bbpvotes-settings.php:94
+#: bbpvotes-settings.php:98
 msgid "Post types enabled"
 msgstr "Posts types activés"
 
-#: bbpvotes-settings.php:102
+#: bbpvotes-settings.php:106
 msgid "Enable downvoting"
 msgstr "Activer le vote contre"
 
-#: bbpvotes-settings.php:110
+#: bbpvotes-settings.php:114
 msgid "Enable unvoting"
 msgstr "Activer l'annulation de vote"
 
 #. ID
-#: bbpvotes-settings.php:118
+#: bbpvotes-settings.php:122
 msgid "Vote Log"
 msgstr "Log de vote"
 
-#: bbpvotes-settings.php:125
+#: bbpvotes-settings.php:129
 msgid "Embed vote log"
 msgstr "Inclure le log de vote"
 
-#: bbpvotes-settings.php:133
+#: bbpvotes-settings.php:137
 msgid "Anonymous voting"
 msgstr "Vote anonyme"
 
 #. ID
-#: bbpvotes-settings.php:141
+#: bbpvotes-settings.php:145
 msgid "Display"
 msgstr "Affichage"
 
-#: bbpvotes-settings.php:148
+#: bbpvotes-settings.php:152
 msgid "Units"
 msgstr "Unités"
 
 #. ID
-#: bbpvotes-settings.php:156
+#: bbpvotes-settings.php:160
 msgid "System"
 msgstr "Système"
 
-#: bbpvotes-settings.php:163
+#: bbpvotes-settings.php:167
 msgid "Cache karma"
 msgstr "Mettre le karma en cache"
 
-#: bbpvotes-settings.php:171
-msgid "Reset Options"
-msgstr "Réinitialiser les options"
-
-#: bbpvotes-settings.php:213
+#: bbpvotes-settings.php:225
 msgid "Allow users to vote down"
 msgstr "Autoriser les utilisateur à voter contre"
 
-#: bbpvotes-settings.php:224
+#: bbpvotes-settings.php:236
 msgid "Allow users to cancel their vote"
 msgstr "Autoriser les utilisateur à annuler leur vote"
 
-#: bbpvotes-settings.php:239
+#: bbpvotes-settings.php:251
 msgid "Display the list of voters under the post"
 msgstr "Afficher la liste des votants sous l'article"
 
-#: bbpvotes-settings.php:250
+#: bbpvotes-settings.php:262
 msgid "Hide voters identity from the vote log"
 msgstr "Cacher l'identité des votants dans le log de vote"
 
-#: bbpvotes-settings.php:266
+#: bbpvotes-settings.php:278
 msgid "singular:"
 msgstr "singulier:"
 
-#: bbpvotes-settings.php:270 bbpvotes-settings.php:279
+#: bbpvotes-settings.php:282 bbpvotes-settings.php:291
 msgid "Where %s will be replaced by a number"
 msgstr "Où %s sera remplacé par un chiffre"
 
-#: bbpvotes-settings.php:275
+#: bbpvotes-settings.php:287
 msgid "plural:"
 msgstr "pluriel:"
 
-#: bbpvotes-settings.php:298
-msgid "seconds"
-msgstr "secondes"
-
-#: bbpvotes-settings.php:299
-msgid "how long should we cache karma for users ?"
-msgstr ""
-"Combien de temps devons-nous mettre le karma des utilisateurs en cache ?"
-
 #. Option name
-#: bbpvotes-settings.php:307
+#: bbpvotes-settings.php:328
 msgid "Reset options to their default values."
 msgstr "Réinitialiser les options à leurs valeurs par défaut."
 
-#: bbpvotes-settings.php:314
+#: bbpvotes-settings.php:335
 msgid "bbPress Votes Settings"
 msgstr "Paramètres de bbPress Votes"
+
+#: bbpvotes-template.php:114
+msgid "This topic is useful and clear"
+msgstr "Cette discussion est utile et claire"
+
+#: bbpvotes-template.php:117
+msgid "This reply is useful"
+msgstr "Cette réponse est utile"
+
+#: bbpvotes-template.php:124
+msgid "You have voted up for this post"
+msgstr "Vous avez voté pour cet article"
 
 #: bbpvotes-template.php:127 bbpvotes-template.php:178
 msgid "Click to remove your vote"
 msgstr "Cliquer pour annuler votre vote"
+
+#: bbpvotes-template.php:166
+msgid "This topic it is unclear or not useful"
+msgstr "Cette discussion n'est pas claire ou est inutile"
+
+#: bbpvotes-template.php:169
+msgid "This reply answer is not useful"
+msgstr "Cette réponse n'est pas utile"
+
+#: bbpvotes-template.php:176
+msgid "You have voted down for this post"
+msgstr "Vous avez voté 'contre' à cet article"
 
 #: bbpvotes-template.php:198
 msgid "Unvote"
@@ -183,98 +279,6 @@ msgstr "Vote annulé"
 msgid "Your vote for this post has been removed"
 msgstr "Votre votre pour cet article a été annulé"
 
-#: bbpvotes-template.php:411
-msgid "and"
-msgstr "et"
-
-#: bbpvotes-template.php:413
-msgid "This post has received %s."
-msgstr "Cet article a reçu %s."
-
-#. Plugin URI of the plugin/theme
-msgid "http://wordpress.org/extend/plugins/bbpress-pencil-unread"
-msgstr ""
-
-#. Author of the plugin/theme
-msgid "G.Breant"
-msgstr ""
-
-#. Author URI of the plugin/theme
-msgid "http://sandbox.pencil2d.org/"
-msgstr ""
-
-#: bbpress-votes.php:198 bbpvotes-template.php:27 bbpvotes-template.php:95
-msgid "Vote up"
-msgstr "Voter 'pour'"
-
-#: bbpress-votes.php:199 bbpvotes-template.php:148
-msgid "Vote down"
-msgstr "Voter 'contre'"
-
-#: bbpress-votes.php:200 bbpvotes-template.php:123
-msgid "You voted up"
-msgstr "Vous avez voté 'pour'"
-
-#: bbpress-votes.php:201 bbpvotes-template.php:175
-msgid "You voted down"
-msgstr "Vous avez voté 'contre'"
-
-#: bbpress-votes.php:312 bbpvotes-buddypress.php:12
-msgid "Vote is not a boolean"
-msgstr "La variable vote n'est pas booléenne"
-
-#: bbpress-votes.php:319
-msgid "You don't have the required capability to vote"
-msgstr "Vous n'avez pas l'autorisation de voter"
-
-#: bbpress-votes.php:327
-msgid "You cannot vote for your own post"
-msgstr "Vous ne pouvez pas voter pour votre propre article"
-
-#: bbpress-votes.php:383
-msgid "You have already voted for this post"
-msgstr "Vous avez déjà voté pour cet article"
-
-#: bbpress-votes.php:409
-msgid "Error while voting for this post"
-msgstr "Erreur lors du vote"
-
-#: bbpvotes-admin.php:72 bbpvotes-admin.php:100
-msgid "Score"
-msgstr "Score"
-
-#: bbpvotes-buddypress.php:5
-msgid "New vote up"
-msgstr "Nouveau vote 'pour'"
-
-#: bbpvotes-buddypress.php:6
-msgid "New vote down"
-msgstr "Nouveau vote 'contre'"
-
-#: bbpvotes-template.php:114
-msgid "This topic is useful and clear"
-msgstr "Cette discussion est utile et claire"
-
-#: bbpvotes-template.php:117
-msgid "This reply is useful"
-msgstr "Cette réponse est utile"
-
-#: bbpvotes-template.php:124
-msgid "You have voted up for this post"
-msgstr "Vous avez voté pour cet article"
-
-#: bbpvotes-template.php:166
-msgid "This topic it is unclear or not useful"
-msgstr "Cette discussion n'est pas claire ou est inutile"
-
-#: bbpvotes-template.php:169
-msgid "This reply answer is not useful"
-msgstr "Cette réponse n'est pas utile"
-
-#: bbpvotes-template.php:176
-msgid "You have voted down for this post"
-msgstr "Vous avez voté 'contre' à cet article"
-
 #: bbpvotes-template.php:378
 msgid "%1$s voted up"
 msgstr "%1$s a voté 'pour'"
@@ -282,6 +286,14 @@ msgstr "%1$s a voté 'pour'"
 #: bbpvotes-template.php:381
 msgid "%1$s voted down"
 msgstr "%1$s a voté 'contre'"
+
+#: bbpvotes-template.php:411
+msgid "and"
+msgstr "et"
+
+#: bbpvotes-template.php:413
+msgid "This post has received %s."
+msgstr "Cet article a reçu %s."
 
 #. Description of the plugin/theme
 msgid ""

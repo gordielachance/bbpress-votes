@@ -48,7 +48,7 @@ Users cannot vote for themselves.  If you are the author of a topic or reply, th
 
 = Can I filter the query to sort posts by votes ? =
 
-Yes, you can sort the posts by score or votes count, using the query variable 'vote_sort'.
+Yes, you can sort the posts by score or votes count, using the query variable 'bbpvote_sort'.
 Allowed values are 'score_desc', 'score_asc', 'count_desc', 'count_asc'.
 
 Example of a [query](https://codex.wordpress.org/Class_Reference/WP_Query) that will fetch the 5 last topics, ordered by score (desc) : 
@@ -57,7 +57,7 @@ Example of a [query](https://codex.wordpress.org/Class_Reference/WP_Query) that 
 $best_rated_topics_args = array(
   'post_type'       => bbp_topic_post_type(), //or 'topic'
   'posts_per_page'  => 5,
-  'vote_sort'       => 'score_desc' //plugin
+  'bbpvote_sort'       => 'score_desc' //plugin
 );
 
 $best_rated_topics = new WP_Query( $best_rated_topics_args );
@@ -83,6 +83,9 @@ If you need more complex customization, you can filter the links using those hoo
 2. Plugin's options page
 
 == Changelog ==
+
+= 1.2.2 =
+* Fixed sort topics by votes
 
 = 1.2.1 =
 * Fixed bug when displaying topic score
