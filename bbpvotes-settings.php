@@ -295,7 +295,7 @@ class bbP_Votes_Settings {
             '<input type="number" name="%s[karma_cache_minutes]" value="%s" min="0" /> %s %s',
             bbpvotes()->metaname_options, // Option name
             $option,
-            __("seconds","bbpvotes"),
+            __("minutes","bbpvotes"),
             '<small> — '.__("how long should we cache karma for users ?","bbpvotes").'</small>'
         );
     }
