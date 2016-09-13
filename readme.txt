@@ -15,9 +15,10 @@ Allows logged users to vote up or down to topics and replies inside bbPress, jus
 
 *   Ajaxed
 *   Compatible with BuddyPress
-*   Hooks and filters to extend the plugin
 *   Votes log with users icons
+*   Options page
 *   Allow to filter a query to sort posts by votes, see FAQ.
+*   Hooks and filters to extend the plugin
 *   Templates functions to use in your themes (see the file **bbpvotes-template.php**); eg. *bbpvotes_get_author_score()* to get an author's score (karma)
 
 = Demo =
@@ -79,8 +80,17 @@ If you need more complex customization, you can filter the links using those hoo
 == Screenshots ==
 
 1. A single reply with score, vote up and vote down links (top) and vote log (after reply content)
+2. Plugin's options page
 
 == Changelog ==
+
+= 1.2 =
+* Migrate options page
+* Option to choose the 'score' unit (pts, kudos, ...)
+* Option to choose which post types are enabled for voting (topics/replies)
+* Use Dashicons instead of fontAwesome in some places
+* Use a transient to cache author's karma
+
 = 1.1.0 =
 * supports unvoting (by reclicking the link)
 * "sort by votes" link before topics loop

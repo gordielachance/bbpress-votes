@@ -1,15 +1,24 @@
 @import "compass/css3";
 
 #bbpress-forums{
-    
-    .bbpvotes-score{
-        font-weight:bold;
-    }
-    .bbpvotes-topic-score{
-        &:before{
-            content:", ";
+
+    .bbpvotes-score-wrapper{
+        label{
+        }
+        span{
+            font-weight:bold;
+        }
+        &.bbpvotes-score-author-wrapper{
+            font-size: 11px;
+            padding:1em 0;
+        }
+        &.bbpvotes-score-topic-wrapper{
+            &:before{
+                content:", ";
+            }
         }
     }
+
     
     .bbpvotes-forum-sort-topics{
         margin-bottom:15px;
@@ -30,6 +39,9 @@
         }
     }
     .bbp-reply-content{
+        
+
+        
         .bbpvotes-post-votes-log {
             border-top: 1px dotted #ddd;
             width: 100%;
@@ -49,12 +61,15 @@
                 @include box-shadow(none);
               }
               .bbpvotes-avatar-icon-vote {
-                position: absolute;
-                bottom: -2.5px;
-                right: -2.5px;
-                font-size: 1em;
-                width: 1em;
-                height: 1em;
+                    position: absolute;
+                    bottom: -2.5px;
+                    right: -2.5px;
+                    font-size: 1em;
+                    width: 1em;
+                    height: 1em;
+                    color:white;
+                    background-color:#C4C4C4;
+                  
               }
             }
         }

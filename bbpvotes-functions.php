@@ -1,6 +1,29 @@
 <?php
 
 /**
+ * Get a value in a multidimensional array
+ * http://stackoverflow.com/questions/1677099/how-to-use-a-string-as-an-array-index-path-to-retrieve-a-value
+ * @param type $keys
+ * @param type $array
+ * @return type
+ */
+function bbpvotes_get_array_value($keys = null, $array){
+    if (!$keys) return $array;
+    
+    $keys = (array)$keys;
+    $first_key = $keys[0];
+    if(count($keys) > 1) {
+        if ( isset($array[$keys[0]]) ){
+            return bbpvotes_get_array_value(array_slice($keys, 1), $array[$keys[0]]);
+        }
+    }elseif (isset($array[$first_key])){
+        return $array[$first_key];
+    }
+    
+    return false;
+}
+
+/**
  * Rebuild scores for all votes
  */
 
@@ -9,7 +32,7 @@ function bbpvotes_rebuild_scores(){
     $post_ids = array();
     
     $default_query_args = array(
-        'post_type'         => bbpvotes()->supported_post_types,
+        'post_type'         => bbpvotes_get_enabled_post_types(),
         'post_status'   => 'any',
         'posts_per_page'    => -1,
         'fields'            => 'ids'
@@ -59,6 +82,7 @@ function bbpvotes_rebuild_scores(){
 function bbpvotes_number_format( $number, $min_value = 1000, $decimal = 1 ) {
     
     $number = (int)$number;
+    $output = null;
 
     if( $number < $min_value ) {
         $output = number_format_i18n( $number );
@@ -79,8 +103,44 @@ function bbpvotes_number_format( $number, $min_value = 1000, $decimal = 1 ) {
 
     }
 
-    return apply_filters('bbpvotes_number_format',$output,$score);
+    return apply_filters('bbpvotes_number_format',$output,$number);
 }
 
+function bbpvotes_get_enabled_post_types(){
+    $enabled = array();
+    $allowed = bbpvotes_get_allowed_post_types();
+    $ignored = bbpvotes()->get_options('ignored_post_type');
+
+    foreach((array)$allowed as $post_type){
+        if( in_array($post_type,$ignored) ) continue;
+        if ( !get_post_type_object($post_type) ) continue;
+        $enabled[] = $post_type;
+    }
+    return $enabled;
+}
+
+function bbpvotes_get_allowed_post_types(){
+    /*
+    $post_types = get_post_types();
+    $disabled = apply_filters('bbpvotes_option_post_type_disabled',array(
+        'attachment',
+        'revision',
+        'nav_menu_item'
+        )
+    );
+    $allowed = array();
+    foreach ((array)$post_types as $post_type){
+        if (in_array($post_type,$disabled)) continue;
+        $allowed[] = $post_type;
+    }
+    */
+
+    $allowed = array(
+        bbp_get_topic_post_type(),
+        bbp_get_reply_post_type()
+    );
+
+    return $allowed;
+}
 
 ?>

@@ -1,5 +1,21 @@
 <?php
 
+function bbpvotes_get_score_text($score){
+    $formatted_score = bbpvotes_number_format($score);
+    $string = null;
+
+    if ($score <= 1){
+        $string = bbpvotes()->get_options('unit_singular');
+    }else{
+        $string = bbpvotes()->get_options('unit_plural');
+    }
+
+    $retval = str_replace('%s',$formatted_score,$string);
+
+    return apply_filters('bbpvotes_get_score_text',$retval,$score);
+
+}
+
 function bbpvotes_get_score_link( $args = '' ) {
 
         // Parse arguments against default values
@@ -47,23 +63,23 @@ function bbpvotes_get_link_icons(){
 function bbpvotes_can_user_vote_up_for_post($post_id = null){
     if (!$post_id) return false;
     if (!$user_id = get_current_user_id()) return false;
-    $can = current_user_can( bbpvotes()->options['vote_up_cap'], $post_id );
+    $can = current_user_can( bbpvotes()->get_options('vote_up_cap'), $post_id );
     return apply_filters('bbpvotes_can_user_vote_up_for_post',$can,$post_id);
 }
 
 function bbpvotes_can_user_vote_down_for_post($post_id = null){
     if (!$post_id) return false;
     if (!$user_id = get_current_user_id()) return false;
-    if (!bbpvotes()->options['vote_down_enabled']) return false;
-    $can = current_user_can( bbpvotes()->options['vote_down_cap'], $post_id );
+    if (bbpvotes()->get_options('vote_down_enabled') != 'on') return false;
+    $can = current_user_can( bbpvotes()->get_options('vote_down_cap'), $post_id );
     return apply_filters('bbpvotes_can_user_vote_down_for_post',$can,$post_id);
 }
 
 function bbpvotes_can_user_unvote_for_post($post_id = null){
     if (!$post_id) return false;
     if (!$user_id = get_current_user_id()) return false;
-    if (!bbpvotes()->options['unvote_enabled']) return false;
-    $can = current_user_can( bbpvotes()->options['unvote_cap'], $post_id );
+    if (bbpvotes()->get_options('unvote_enabled') != 'on') return false;
+    $can = current_user_can( bbpvotes()->get_options('unvote_cap'), $post_id );
     return apply_filters('bbpvotes_can_user_unvote_for_post',$can,$post_id);
 }
 
@@ -242,7 +258,7 @@ function bbpvotes_has_user_voted_up_for_post( $post_id = null, $user_id = 0 ){
 
     $args = array(
         'p'             => $post_id,
-        'post_type'	=> get_post_type($post_id), //TO FIX this should not be set to 'any' but does not work - or eventually bbpvotes()->supported_post_types
+        'post_type'	=> get_post_type($post_id), //TO FIX this should not be set to 'any' but does not work - or eventually bbpvotes_get_enabled_post_types()
         'post_status'   => 'any',
         'posts_per_page' => -1,
         'meta_query' => array(
@@ -352,7 +368,7 @@ function bbpvotes_get_post_votes_log( $post_id = 0 ) {
 
         $r = "\n\n" . '<div id="bbpvotes-post-votes-log-' . esc_attr( $post_id ) . '" class="bbpvotes-post-votes-log">' . "\n\n";
         
-        if (!bbpvotes()->options['anonymous_vote']){
+        if ( bbpvotes()->get_options('anonymous_vote') == 'off'){
             foreach ( $votes as $user_id => $score ) {
 
                 $user_id = bbp_get_user_id( $user_id );
@@ -360,10 +376,10 @@ function bbpvotes_get_post_votes_log( $post_id = 0 ) {
 
                 if ($score>0){
                     $title = sprintf( esc_html__( '%1$s voted up', 'bbpvotes' ), $user->display_name);
-                    $icon = '<i class="bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-plus fa fa-plus-square"></i>';
+                    $icon = '<span class="dashicons dashicons-plus bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-plus"></span>';
                 }else{
                     $title = sprintf( esc_html__( '%1$s voted down', 'bbpvotes' ), $user->display_name);
-                    $icon = '<i class="bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-minus fa fa-minus-square"></i>';
+                    $icon = '<span class="bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-minus bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-minus"></span>';
                 }
 
 
@@ -393,9 +409,8 @@ function bbpvotes_get_post_votes_log( $post_id = 0 ) {
             }
             
             $votes_str = implode(' '.__('and','bbpvotes').' ',$votes_str);
-            
-            
-            $r.= sprintf(__('This reply has received %1$s.','bbpvotes'),$votes_str);
+
+            $r.= sprintf(__('This post has received %s.','bbpvotes'),$votes_str);
             
         }
 
@@ -440,7 +455,7 @@ function bbpvotes_get_votes_down_by_user_count( $user_id = 0, $post_args = null 
         //2. limit results with regular posts query (allow to exclude by post status, etc.)
 
         $defaults = array(
-            'post_type'         => bbpvotes()->supported_post_types,
+            'post_type'         => bbpvotes_get_enabled_post_types(),
             'post_status'       => 'any',
             'posts_per_page'    => -1,
             'fields'            => 'ids',
@@ -490,7 +505,7 @@ function bbpvotes_get_votes_up_by_user_count( $user_id = 0, $post_args = null ){
         //2. limit results with regular posts query (allow to exclude by post status, etc.)
 
         $defaults = array(
-            'post_type'         => bbpvotes()->supported_post_types,
+            'post_type'         => bbpvotes_get_enabled_post_types(),
             'post_status'       => 'any',
             'posts_per_page'    => -1,
             'fields'            => 'ids',
@@ -523,48 +538,70 @@ function bbpvotes_get_votes_total_by_user_count( $user_id = 0, $post_args = null
 
 function bbpvotes_get_author_score( $author_id = 0, $post_args = null ){
     global $wpdb;
-    
-    
+
     if (!$author_id) $author_id = get_current_user_id();
     
-    //Get posts by this author
-    
-    $defaults = array(
-        'author'            => $author_id,
-        'post_type'         => bbpvotes()->supported_post_types,
-        'post_status'       => 'any',
-        'fields'            => 'ids',
-        'posts_per_page'    => -1
-    );
-    
-    // Parse arguments against default values
-    $post_args = bbp_parse_args( $post_args, $defaults, 'bbpvotes_get_votes_down_for_author_count_post_args' );
-    
-    $query = new WP_Query( $post_args );
+    $retval = false;
 
-    if ($query->found_posts){
+    if ($author_id){
         
-        $post_ids = $query->posts;
-        $post_ids_str = implode(',',$post_ids);
+        $transient_name = 'bbpvotes_karma_user_'.$author_id;
+        $transient_duration = bbpvotes()->get_options('karma_cache_minutes') * MINUTE_IN_SECONDS;
 
-        //Get sum of scores for those posts
+        if ( (!$transient_duration) || ( false === ( $retval = get_transient( $transient_name ) ) ) ) { //is cache enabled ?
+
+            //Get all posts by this author
+
+            $defaults = array(
+                'author'            => $author_id,
+                'post_type'         => bbpvotes_get_enabled_post_types(),
+                'post_status'       => 'any',
+                'fields'            => 'ids',
+                'posts_per_page'    => -1
+            );
+
+            $post_args = bbp_parse_args( $post_args, $defaults, 'bbpvotes_get_votes_down_for_author_count_post_args' );
+
+            $query = new WP_Query( $post_args );
+
+            if ($query->found_posts){
+
+                $post_ids = $query->posts;
+                $post_ids_str = implode(',',$post_ids);
+
+                //Get sum of scores for those posts
+
+                $query =  $wpdb->prepare(
+                        "
+                        SELECT      meta_value
+                        FROM        $wpdb->postmeta
+                        WHERE       meta_key = %s 
+                                    AND post_id IN ({$post_ids_str})
+                        ",
+                        bbpvotes()->metaname_post_vote_score
+                );
+
+                $votes_scores = $wpdb->get_col( $query ); 
+
+                bbpvotes()->debug_log("bbpvotes_get_author_score for user#".$author_id);
+                bbpvotes()->debug_log($query);
+
+                $retval = array_sum($votes_scores);
+
+            }else{
+                $retval = 0;
+            }
+            
+            if (!$transient_duration){
+                set_transient( $transient_name, $retval, $transient_duration );
+            }
+            
+        }
         
-        $votes_scores = $wpdb->get_col( $wpdb->prepare(
-                "
-                SELECT      meta_value
-                FROM        $wpdb->postmeta
-                WHERE       meta_key = %s 
-                            AND post_id IN ({$post_ids_str})
-                ",
-                bbpvotes()->metaname_post_vote_score
-        ) ); 
-
-        return array_sum($votes_scores);
-
-    }else{
-        return 0;
     }
     
+    return $retval;
+
 }
 
 function bbpvotes_classes_attr($classes=false){
