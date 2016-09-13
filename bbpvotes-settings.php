@@ -26,6 +26,10 @@ class bbP_Votes_Settings {
 
     function settings_sanitize( $input ){
         $new_input = array();
+        
+        if( isset( $input['rebuild_scores'] ) ){
+            bbpvotes_rebuild_scores();
+        }
 
         if( isset( $input['reset_options'] ) ){
             
@@ -167,8 +171,16 @@ class bbP_Votes_Settings {
         );
         
         add_settings_field(
+            'rebuild_scores', 
+            __('Rebuild scores','bbpvotes'), 
+            array( $this, 'rebuild_scores_callback' ), 
+            'bbpvotes-settings-page', // Page
+            'settings_system'//section
+        );
+        
+        add_settings_field(
             'reset_options', 
-            __('Reset Options','bbpvotes'), 
+            __('Reset options','bbpvotes'), 
             array( $this, 'reset_options_callback' ), 
             'bbpvotes-settings-page', // Page
             'settings_system'//section
@@ -296,7 +308,16 @@ class bbP_Votes_Settings {
             bbpvotes()->metaname_options, // Option name
             $option,
             __("minutes","bbpvotes"),
-            '<small> — '.__("how long should we cache karma for users ?","bbpvotes").'</small>'
+            '<small> — '.__("How long should we cache karma for users ?","bbpvotes").'</small>'
+        );
+    }
+    
+    function rebuild_scores_callback(){
+        printf(
+            '<input type="checkbox" name="%s[rebuild_scores]" value="on"/> %s %s',
+            bbpvotes()->metaname_options, // Option name
+            __("Rebuild all scores","bbpvotes"),
+            '<small> — '.__("This could be slow to compute","bbpvotes").'</small>'
         );
     }
     
