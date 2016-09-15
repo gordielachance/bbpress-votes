@@ -14,7 +14,7 @@ Allows logged users to vote up or down to topics and replies inside bbPress, jus
 Allows logged users to vote up or down to topics and replies inside bbPress, just like you can on StackOverflow for example.
 
 *   Ajaxed
-*   Compatible with BuddyPress
+*   BuddyPress integration
 *   Votes log with users icons
 *   Options page
 *   Allow to filter a query to sort posts by votes, see FAQ.
@@ -84,8 +84,8 @@ If you need more complex customization, you can filter the links using those hoo
 
 == Changelog ==
 
-= XXX =
-* new BuddyPress profile submenu : forum>karma , where replies are sorted by score
+= 1.2.3 =
+* new BuddyPress profile submenu : forum>karma, where replies are sorted by score
 
 = 1.2.2 =
 * Fixed sort topics by votes
