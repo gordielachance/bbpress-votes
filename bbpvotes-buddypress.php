@@ -14,7 +14,7 @@ class bbP_Votes_BuddyPress {
         $karma = 10;
         $parent_slug = BP_FORUMS_SLUG;
         
-        $karma = bbpvotes_get_author_score( bbp_get_reply_author_id() );
+        $karma = bbpvotes_get_author_score( bp_displayed_user_id() );
         $karma_text = bbpvotes_get_score_text($karma);
 
         bp_core_new_subnav_item( 
@@ -25,7 +25,6 @@ class bbP_Votes_BuddyPress {
                 'parent_url'      => trailingslashit( bp_displayed_user_domain() . $parent_slug ),
                 'parent_slug'     => $parent_slug,
                 'screen_function' => array(&$this,'karma_screen'),
-                //'user_has_access'   => true,
                 'item_css_id'       => 'bbpvotes-karma'
             )
         );
