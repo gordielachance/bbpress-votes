@@ -84,6 +84,9 @@ If you need more complex customization, you can filter the links using those hoo
 
 == Changelog ==
 
+= XXX =
+* new BuddyPress profile submenu : forum>karma , where replies are sorted by score
+
 = 1.2.2 =
 * Fixed sort topics by votes
 

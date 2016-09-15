@@ -143,7 +143,7 @@ class bbP_Votes {
             add_action( 'bbp_theme_after_reply_author_details', array($this, 'display_reply_author_karma'));
             add_action( 'bbp_theme_after_topic_started_by', array($this, 'display_topic_score'));
             add_action( 'bbp_template_before_single_forum', array($this, 'topics_loop_sort_link'),9);
-            add_action( 'bp_include', array($this, 'includes_buddypress'));     //buddypress
+            
             
             add_filter( 'bbp_before_has_topics_parse_args', array($this, 'add_topic_sort_arg'));
             add_action( 'pre_get_posts', array($this, 'sort_by_votes'));
@@ -151,6 +151,10 @@ class bbP_Votes {
             add_action("wp", array(&$this,"process_vote_link"));    //vote without ajax
             
             add_action( 'delete_user', array(&$this,"delete_user_votes"));
+        
+            //buddypress
+            add_action( 'bp_include', array($this, 'includes_buddypress'));     //buddypress
+        
 
 	}
 
