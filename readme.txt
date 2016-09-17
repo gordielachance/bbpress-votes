@@ -84,6 +84,9 @@ If you need more complex customization, you can filter the links using those hoo
 
 == Changelog ==
 
+= 1.2.4 =
+* karma transient fix
+
 = 1.2.3 =
 * new BuddyPress profile submenu : forum>karma, where replies are sorted by score
 

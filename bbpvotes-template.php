@@ -592,7 +592,7 @@ function bbpvotes_get_author_score( $author_id = 0, $post_args = null ){
                 $retval = 0;
             }
             
-            if (!$transient_duration){
+            if ($transient_duration){
                 set_transient( $transient_name, $retval, $transient_duration );
             }
             
