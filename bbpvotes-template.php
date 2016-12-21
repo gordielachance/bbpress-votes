@@ -83,6 +83,15 @@ function bbpvotes_can_user_unvote_for_post($post_id = null){
     return apply_filters('bbpvotes_can_user_unvote_for_post',$can,$post_id);
 }
 
+function bbpvotes_can_user_best_reply_for_post($post_id = null){
+    if (!$post_id) return false;
+    if (!$user_id = get_current_user_id()) return false;
+    if ( get_post_type($post_id) != bbp_get_reply_post_type() ) return false;
+    
+    if (bbpvotes()->get_options('best_reply_enabled') != 'on') return false;
+    $can = current_user_can( bbpvotes()->get_options('best_reply_cap'), $post_id );
+    return apply_filters('bbpvotes_can_user_best_reply_for_post',$can,$post_id);
+}
 
 function bbpvotes_get_vote_up_link( $args = '' ) {
 
@@ -226,6 +235,37 @@ function bbpvotes_get_unvote_link( $args = '' ) {
         $retval  = $r['link_before'] . '<a href="' . esc_url( $uri ) . '"  title="' . $r['title'] . '"'.bbpvotes_classes_attr($link_classes).'>' . bbpvotes_get_link_icons() . $r['text'] . '</a>' . $r['link_after'];
 
         return apply_filters( 'bbpvotes_get_unvote_link', $retval, $r );
+}
+
+function bbpvotes_get_best_reply_link( $args = '' ) {
+
+        // Parse arguments against default values
+        $r = bbp_parse_args( $args, array(
+                'id'           => 0,
+                'link_before'  => '',
+                'link_after'   => '',
+                'sep'          => ' | ',
+                'text'    => esc_html__( 'Best reply',   'bbpvotes' ),
+        ), 'get_post_best_reply_link' );
+
+        if (!$post = get_post( (int) $r['id'] )) return false;
+        
+        //capability check
+        if (!bbpvotes_can_user_best_reply_for_post($post->ID)) return false;
+
+        $post_type = $post->post_type;
+        $link_classes = array(
+            'bbpvotes-post-vote-link',
+            'bbpvotes-post-bestreply-link'
+        );
+        
+        $r['title'] = __('Mark as best topic reply','bbpvotes');
+
+        $uri     = add_query_arg( array( 'action' => 'bbpvotes_post_best_reply', 'post_id' => $post->ID ) );
+        $uri     = wp_nonce_url( $uri, 'best-reply-post_' . $post->ID );
+        $retval  = $r['link_before'] . '<a href="' . esc_url( $uri ) . '"  title="' . $r['title'] . '"'.bbpvotes_classes_attr($link_classes).'>' . bbpvotes_get_link_icons() . $r['text'] . '</a>' . $r['link_after'];
+
+        return apply_filters( 'bbpvotes_get_best_reply_link', $retval, $r );
 }
 
 /**

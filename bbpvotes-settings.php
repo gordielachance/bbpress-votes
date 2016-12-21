@@ -49,6 +49,7 @@ class bbP_Votes_Settings {
 
             $new_input['vote_down_enabled'] = ( isset($input['vote_down_enabled']) ) ? 'on' : 'off';
             $new_input['unvote_enabled'] = ( isset($input['unvote_enabled']) ) ? 'on' : 'off';
+            $new_input['best_reply_enabled'] = ( isset($input['best_reply_enabled']) ) ? 'on' : 'off';
             $new_input['anonymous_vote'] = ( isset($input['anonymous_vote']) ) ? 'on' : 'off';
             $new_input['embed_votes_log'] = ( isset($input['embed_votes_log']) ) ? 'on' : 'off';
             $new_input['karma_cache_minutes'] = (int) $input['karma_cache_minutes'];
@@ -113,6 +114,14 @@ class bbP_Votes_Settings {
             'enable_unvoting', 
             __('Enable unvoting','bbpvotes'), 
             array( $this, 'enable_unvoting_callback' ), 
+            'bbpvotes-settings-page', // Page
+            'settings_general'//section
+        );
+        
+        add_settings_field(
+            'enable_best_reply', 
+            __('Enable best reply','bbpvotes'), 
+            array( $this, 'enable_best_reply_callback' ), 
             'bbpvotes-settings-page', // Page
             'settings_general'//section
         );
@@ -213,6 +222,17 @@ class bbP_Votes_Settings {
                 $name
             );
         }
+    }
+    
+    function enable_best_reply_callback(){
+        $option = bbpvotes()->get_options('best_reply_enabled');
+        
+        printf(
+            '<input type="checkbox" name="%s[best_reply_enabled]" value="on" %s /> %s',
+            bbpvotes()->metaname_options,
+            checked( $option, 'on', false ),
+            __("Allow topic authors to mark the best reply","bbpvotes")
+        );
     }
     
     function enable_downvoting_callback(){

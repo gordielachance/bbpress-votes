@@ -87,6 +87,7 @@ class bbP_Votes {
         
         $this->options_default = array(
                     'ignored_post_type'     => array(),
+                    'best_reply_enabled'    => 'on',
                     'vote_down_enabled'     => 'on',
                     'unvote_enabled'        => 'on',
                     'embed_links'           => 'on',    //embed score, vote up, vote down links above replies
@@ -97,6 +98,7 @@ class bbP_Votes {
                     'vote_up_cap'           => 'read',  //capability required to vote up
                     'vote_down_cap'         => 'read',  //capability required to vote down
                     'unvote_cap'            => 'read',
+                    'best_reply_cap'        => 'read',
                     'karma_cache_minutes'   => 60, //how many minutes do we cache a user's karma ?    
 
                 );
@@ -232,9 +234,10 @@ class bbP_Votes {
         ), 'get_topic_admin_links' );
 
         $vote_links = array(
-            'score' => bbpvotes_get_score_link( $r ),
-            'vote_up' => bbpvotes_get_vote_up_link( $r ),
-            'vote_down' => bbpvotes_get_vote_down_link( $r )
+            'score'         => bbpvotes_get_score_link( $r ),
+            'vote_up'       => bbpvotes_get_vote_up_link( $r ),
+            'vote_down'     => bbpvotes_get_vote_down_link( $r ),
+            'best_reply'    => bbpvotes_get_best_reply_link( $r )
         );
 
         $vote_links = array_filter($vote_links);
