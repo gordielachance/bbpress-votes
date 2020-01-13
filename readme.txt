@@ -1,9 +1,9 @@
 === bbPress Votes ===
 Contributors:grosbouff
 Donate link:http://bit.ly/gbreant
-Tags: bbPress, vote, votes, rate, rating, ratings, BuddyPress
+Tags: bbPress, vote, votes, rate, rating, ratings, reputation,BuddyPress
 Requires at least: 4.1.1
-Tested up to: 4.6.1
+Tested up to: 5.3.2
 Stable tag: trunk
 License: GPLv2 or later
 
@@ -22,19 +22,23 @@ Allows logged users to vote up or down to topics and replies inside bbPress, jus
 *   Templates functions to use in your themes (see the file **bbpvotes-template.php**); eg. *bbpvotes_get_author_score()* to get an author's score (karma)
 
 = Demo =
-See it in action [here](http://www.pencil2d.org/?post_type=forum).
+
+We don't have a running demo anymore.  If you use this plugin and would like to be featured here, please [contact us](https://github.com/gordielachance/bbpress-votes/issues/5)
+
+= Donate =
+
+Donations are needed to help maintain this plugin.  Please consider [supporting us](http://bit.ly/gbreant).
+This would be very appreciated — Thanks !
 
 = Contributors =
-[Contributors are listed
-here](https://github.com/gordielachance/bbpress-votes/contributors)
-= Notes =
 
-For feature request and bug reports, [please use the
-forums](http://wordpress.org/support/plugin/bbpress-votes#postform).
+Contributors [are listed here](https://github.com/gordielachance/bbpress-votes/contributors)
 
-If you are a plugin developer, [we would like to hear from
-you](https://github.com/gordielachance/bbpress-votes). Any contribution would be
-very welcome.
+= Bugs/Development =
+
+For feature request and bug reports, please use the [Github Issues Tracker](https://github.com/gordielachance/bbpress-votes/issues).
+
+If you are a plugin developer, [we would like to hear from you](https://github.com/gordielachance/bbpress-votes). Any contribution would be very welcome.
 
 == Installation ==
 
