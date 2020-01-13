@@ -332,7 +332,19 @@ class bbP_Votes_Settings {
 	function  settings_page() {
         ?>
         <div class="wrap">
+        
             <h2><?php _e('bbPress Votes Settings','bbpvotes');?></h2>  
+
+            <div>
+                <?php
+                $rate_link_wp = 'https://wordpress.org/support/view/plugin-reviews/bbpress-votes?rate#postform';
+                $rate_link = '<a href="'.$rate_link_wp.'" target="_blank" href=""><i class="fa fa-star"></i> '.__('Reviewing it','bbppu').'</a>';
+                $donate_link = '<a href="http://bit.ly/gbreant" target="_blank" href=""><i class="fa fa-usd"></i> '.__('make a donation','bbppu').'</a>';
+
+                echo '<p>'.sprintf(__('Great experience with this plugin ? %s and %s would help us maintaining it !','bbppu'),$rate_link,$donate_link).'</p>';
+                ?>
+            </div>
+            <hr/>
             
             <?php settings_errors('bbpvotes_option_group');?>
             <form method="post" action="options.php">
