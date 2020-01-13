@@ -5,7 +5,7 @@ Tags: bbPress, vote, votes, rate, rating, ratings, reputation,BuddyPress
 Requires at least: 4.1.1
 Tested up to: 5.3.2
 Stable tag: trunk
-License: GPLv2 or later
+License: GPL2+
 
 Allows logged users to vote up or down to topics and replies inside bbPress, just like you can on StackOverflow for example.
 
