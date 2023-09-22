@@ -52,12 +52,13 @@ function bbpvotes_get_score_link( $args = '' ) {
 
 function bbpvotes_get_link_icons(){
     //icons
-    $icons = array(
-        '<i class="bbpvotes-icon bbpvotes-icon-loading fa fa-circle-o-notch fa-spin"></i>',
-        '<i class="bbpvotes-icon bbpvotes-icon-error fa fa-exclamation-triangle"></i>',
-        '<i class="bbpvotes-icon bbpvotes-icon-success fa fa-check"></i>',
-    );
-    return implode('',$icons);
+    // $icons = array(
+    //     '<i class="bbpvotes-icon bbpvotes-icon-loading fa fa-circle-o-notch fa-spin"></i>',
+    //     '<i class="bbpvotes-icon bbpvotes-icon-error fa fa-exclamation-triangle"></i>',
+    //     '<i class="bbpvotes-icon bbpvotes-icon-success fa fa-check"></i>',
+    // );
+    // return implode('',$icons);
+    return "";
 }
 
 function bbpvotes_can_user_vote_up_for_post($post_id = null){
@@ -92,7 +93,7 @@ function bbpvotes_get_vote_up_link( $args = '' ) {
                 'link_before'  => '',
                 'link_after'   => '',
                 'sep'          => ' | ',
-                'text'    => esc_html__( 'Vote up',   'bbpvotes' ),
+                'text'    =>   '<i class="bbpvotes-icon bbpvotes-icon-success fa fa-thumbs-up"></i> ' . esc_html__( 'Vote up',   'bbpvotes' ),
         ), 'get_post_vote_up_link' );
 
         if (!$post = get_post( (int) $r['id'] )) return false;
@@ -145,7 +146,7 @@ function bbpvotes_get_vote_down_link( $args = '' ) {
                 'link_before'  => '',
                 'link_after'   => '',
                 'sep'          => ' | ',
-                'text'    => esc_html__( 'Vote down',   'bbpvotes' ),
+                'text'    => '<i class="bbpvotes-icon bbpvotes-icon-success fa fa-thumbs-down"></i> '.esc_html__( 'Vote down',   'bbpvotes' ),
         ), 'get_post_vote_down_link' );
 
         if (!$post = get_post( (int) $r['id'] )) return false;
@@ -379,7 +380,7 @@ function bbpvotes_get_post_votes_log( $post_id = 0 ) {
                     $icon = '<span class="dashicons dashicons-plus bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-plus"></span>';
                 }else{
                     $title = sprintf( esc_html__( '%1$s voted down', 'bbpvotes' ), $user->display_name);
-                    $icon = '<span class="bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-minus bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-minus"></span>';
+                    $icon = '<span class="dashicons dashicons-minus bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-vote bbpvotes-avatar-icon-minus"></span>';
                 }
 
 

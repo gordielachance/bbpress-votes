@@ -72,19 +72,19 @@ msgstr ""
 
 #: bbpress-votes.php:196 bbpvotes-template.php:27 bbpvotes-template.php:95
 msgid "Vote up"
-msgstr "Voter 'pour'"
+msgstr "Voter pour"
 
 #: bbpress-votes.php:197 bbpvotes-template.php:148
 msgid "Vote down"
-msgstr "Voter 'contre'"
+msgstr "Voter contre"
 
 #: bbpress-votes.php:198 bbpvotes-template.php:123
 msgid "You voted up"
-msgstr "Vous avez voté 'pour'"
+msgstr "Vous avez voté pour"
 
 #: bbpress-votes.php:199 bbpvotes-template.php:175
 msgid "You voted down"
-msgstr "Vous avez voté 'contre'"
+msgstr "Vous avez voté contre"
 
 #: bbpress-votes.php:247
 msgid "Karma:"
@@ -144,11 +144,11 @@ msgstr "Total des votes: %1$s"
 
 #: bbpvotes-buddypress.php:5
 msgid "New vote up"
-msgstr "Nouveau vote 'pour'"
+msgstr "Nouveau vote pour"
 
 #: bbpvotes-buddypress.php:6
 msgid "New vote down"
-msgstr "Nouveau vote 'contre'"
+msgstr "Nouveau vote contre"
 
 #. ID
 #: bbpvotes-settings.php:91
@@ -261,7 +261,7 @@ msgstr "Cette réponse n'est pas utile"
 
 #: bbpvotes-template.php:176
 msgid "You have voted down for this post"
-msgstr "Vous avez voté 'contre' à cet article"
+msgstr "Vous avez voté contre à cet article"
 
 #: bbpvotes-template.php:198
 msgid "Unvote"
@@ -281,11 +281,11 @@ msgstr "Votre votre pour cet article a été annulé"
 
 #: bbpvotes-template.php:378
 msgid "%1$s voted up"
-msgstr "%1$s a voté 'pour'"
+msgstr "%1$s a voté pour"
 
 #: bbpvotes-template.php:381
 msgid "%1$s voted down"
-msgstr "%1$s a voté 'contre'"
+msgstr "%1$s a voté contre"
 
 #: bbpvotes-template.php:411
 msgid "and"
