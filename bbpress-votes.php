@@ -4,7 +4,7 @@ Plugin Name: bbPress Votes
 Plugin URI: http://wordpress.org/extend/plugins/bbpress-votes
 Description: Allow users to vote up or down to topics and replies inside bbPress, just like you can on StackOverflow for example.
 Author: G.Breant
-Version: 1.2.5
+Version: 1.2.6
 Author URI: https://profiles.wordpress.org/grosbouff/
 License: GPLv2 or later
 Text Domain: bbpvotes
@@ -16,7 +16,7 @@ class bbP_Votes {
         /**
 	 * @public string plugin version
 	 */
-	public $version = '1.2.5';
+	public $version = '1.2.6';
         
 	/**
 	 * @public string plugin DB version
@@ -35,6 +35,13 @@ class bbP_Votes {
 	 * @public string Absolute path to the plugin directory
 	 */
 	public $plugin_dir = '';
+
+
+    public $plugin_url ='';
+
+    public $options_default;
+
+    public $options;
         
 	/**
 	 * @public meta name for post votes
@@ -158,7 +165,7 @@ class bbP_Votes {
 	}
 
 	function load_plugin_textdomain(){
-		load_plugin_textdomain('bbpvotes', FALSE, $this->plugin_dir.'languages/');
+		load_plugin_textdomain('bbpvotes', FALSE, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
 	}
   
 	function upgrade(){
@@ -400,9 +407,7 @@ class bbP_Votes {
         return true;
     }
     
-    /**
-    Adds the bbpress sort args (if any) when fetching the topics
-    **/
+    /**  Adds the bbpress sort args (if any) when fetching the topics  **/
     
     function add_topic_sort_arg($args){
         global $wp_query;
